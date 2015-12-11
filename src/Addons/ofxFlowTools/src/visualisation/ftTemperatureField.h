@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftTemperatureField {
 	public:
 		
-		void	allocate(int _width, int _height){
+		void	setup(int _width, int _height){
 			width = _width;
 			height = _height;
 			
@@ -25,8 +25,7 @@ namespace flowTools {
 			
 			
 			parameters.setName("temperature field");
-			parameters.add(vectorSize.set("vector Size", .25, 0, 1));
-			parameters.add(maxSize.set("maxSize", 0.9 / height, 0, 1));
+			parameters.add(temperatureScale.set("temperature scale", .25, 0, 1));
 			parameters.add(lineSmooth.set("line smooth", false));
 		};
 		
@@ -43,7 +42,9 @@ namespace flowTools {
 			}
 						
 			ofScale(_width, _height);
-			temperatureFieldShader.update(fieldVbo, *floatTexture, vectorSize.get(), maxSize.get());
+			float barHeight =  2.0 * 0.9 / height;
+			float barWidth = 5.0;
+			temperatureFieldShader.update(fieldVbo, *temperatureTexture, temperatureScale.get(), barHeight, barWidth);
 			
 			if (lineSmooth.get()) {
 				glDisable(GL_LINE_SMOOTH);
@@ -54,18 +55,14 @@ namespace flowTools {
 			ofPopMatrix();
 		}
 		
-		void	setSource(ofTexture& tex)	{ floatTexture = &tex; }
-		void	setVectorSize(float _value)	{ vectorSize.set(_value); }
-		void	setMaxSize(float _value)	{ maxSize.set(_value); }
-		void	setLineSmooth(bool _value)	{ lineSmooth.set(_value); }
-		void	setLineWidth(float _value)	{ lineWidth.set(_value); }
+		void	setTemperature(ofTexture& tex)		{ temperatureTexture = &tex; }
+		void	setTemperatureScale(float _value)	{ temperatureScale.set(_value); }
+		void	setLineSmooth(bool _value)			{ lineSmooth.set(_value); }
 		
-		float	getVectorSize()	{ return vectorSize.get(); }
-		float	getMaxSize()	{ return maxSize.get(); }
-		bool	getLineSmooth() { return lineSmooth.get(); }
-		float	getLineWidth()	{ return lineWidth.get(); }
-		int		getWidth()		{ return width; }
-		int		getHeight()		{ return height; }
+		float	getTemperatureScale()				{ return temperatureScale.get(); }
+		bool	getLineSmooth()						{ return lineSmooth.get(); }
+		int		getWidth()							{ return width; }
+		int		getHeight()							{ return height; }
 		
 		
 		ofParameterGroup	parameters;
@@ -74,13 +71,11 @@ namespace flowTools {
 		int		width;
 		int		height;
 		
-		ofParameter<float>	vectorSize;
-		ofParameter<float>	maxSize;
+		ofParameter<float>	temperatureScale;
 		ofParameter<bool>	lineSmooth;
-		ofParameter<float>	lineWidth;
 		
+		ofTexture*	temperatureTexture;
 		ofMesh		fieldMesh;
-		ofTexture*	floatTexture;
 		ofVbo		fieldVbo;
 		
 		ftTemperatureFieldShader temperatureFieldShader;

@@ -11,7 +11,7 @@
 
 #include "ofMain.h"
 
-#include "HaloRing.h"
+#include "DisplayUnit.h"
 
 
 
@@ -23,9 +23,9 @@ class DisplayFadeCandy {
     
         virtual ~DisplayFadeCandy();
     
-        void addHaloRing(ofPtr<HaloRing> haloRing);
+        void addDisplayUnit(ofPtr<DisplayUnit> displayUnit);
     
-        void updateHaloRings(const ofRectangle& grabArea, const ofPixels& screenPixels);
+        void updateDisplayUnits(const ofRectangle& grabArea, const ofPixels& screenPixels);
     
         void draw();
     
@@ -39,13 +39,13 @@ class DisplayFadeCandy {
     
         void createLedColorVector();
     
-        void drawHaloRings();
+        void drawDisplayUnits();
     
     private:
     
-        typedef std::map < string, ofPtr<HaloRing> > HaloRingsMap;
+        typedef std::map < string, ofPtr<DisplayUnit> > DisplayUnitsMap;
     
-        HaloRingsMap m_haloRings;
+        DisplayUnitsMap m_displayUnits;
     
         vector <ofColor> m_ledColors;
 

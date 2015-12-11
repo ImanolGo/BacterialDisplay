@@ -24,7 +24,7 @@ Font::~Font()
 bool Font::setup( string fontFile, float fontSize, float lineHeightPercent)
 {
 
-    m_trueTypeFont.setEncoding(OF_ENCODING_UTF8);
+    //m_trueTypeFont.setEncoding(OF_ENCODING_UTF8);
 
 	m_lineHeight = lineHeightPercent;
 
@@ -34,7 +34,7 @@ bool Font::setup( string fontFile, float fontSize, float lineHeightPercent)
     float simplifyAmt=0.3;
     int dpi=0.0;
 
-	if(m_trueTypeFont.loadFont(fontFile,fontSize,bAntiAliased,bFullCharacterSet,makeContours,simplifyAmt,dpi)){
+	if(m_trueTypeFont.load(fontFile,fontSize,bAntiAliased,bFullCharacterSet,makeContours,simplifyAmt,dpi)){
 	    //ofLogNotice() << "Font::setup-> font loaded " << fontFile << " with size " << fontSize;
         return true;
 	}

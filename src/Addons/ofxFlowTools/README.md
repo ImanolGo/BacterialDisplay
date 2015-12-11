@@ -1,11 +1,3 @@
-UPDATE 
-
-- Added possibility to switch the Fbos to different GL formats (GL_RG32F, GL_R32F, etc)
-- Added possibility to use the programmable GL renderer (OpenGL3 / GLSL150)
-- Added Visual Studio 2012 compatibility and example (note: BUG in Optical Flow Timeblur)
-
-
-
 
 ofxFlowTools
 ============
@@ -27,10 +19,13 @@ To complete the addon (what is a fluid sim without particles?) I added experimen
 Have fun!
 
 
-DEPENDENCIES
+DEPENDENCIES & SYSTEM SPECS
 
-The addon was created for OSX 10.8 / 10.9 using OF 0.8.0.
-The example was tested on 0.8.0 and 0.8.1, because of a small bug in the allocation of fbos in 0.8.1 (min- and maxFilter is not set) the particles behave incorrectly.
+- The last version of the addon was created using OSX 10.10 and OF 0.8.4, using nVidia Geforce graphics cards.
+- The addon should work on older versions of OSX, Windows and Linux, using nVidia Geforce, AMD Radeon cards.
+- The addon might work on professional nVidia and AMD cards (it did work on the MacPro FirePro card, but not as fast as expected).
+- The addon does NOT work on most integrated Intel graphics solutions, like the MacMini Iris graphics.
+
 
 
 CREDITS AND ACKNOWLEDGEMENTS:

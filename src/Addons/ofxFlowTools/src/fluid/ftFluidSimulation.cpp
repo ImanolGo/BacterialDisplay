@@ -42,42 +42,42 @@ namespace flowTools {
 		
 		parameters.setName("fluid solver");
 		parameters.add(doReset.set("reset", false));
-		parameters.add(speed.set("speed", 10, 0, 100));
+		parameters.add(speed.set("speed", 20, 0, 100));
 		parameters.add(cellSize.set("cell size", 1.25, 0.0, 2.0));
 		parameters.add(numJacobiIterations.set("iterations", 40, 1, 100));
-		parameters.add(viscosity.set("viscosity", 0.005, 0, 1));
-		parameters.add(vorticity.set("vorticity", 0.1, 0.0, 1));
-		parameters.add(dissipation.set("dissipation", 0.01f, 0, 0.02));
+		parameters.add(viscosity.set("viscosity", 0.1, 0, 1));
+		parameters.add(vorticity.set("vorticity", 0.6, 0.0, 1));
+		parameters.add(dissipation.set("dissipation", 0.002, 0, 0.01));
 		advancedDissipationParameters.setName("advanced dissipation");
-		advancedDissipationParameters.add(velocityOffset.set("velocity offset", 0, -0.01, 0.01));
+		advancedDissipationParameters.add(velocityOffset.set("velocity offset", -0.001, -0.01, 0.01));
 		advancedDissipationParameters.add(densityOffset.set("density offset", 0, -0.01, 0.01));
-		advancedDissipationParameters.add(temperatureOffset.set("temperature offset", 0, -0.01, 0.01));
+		advancedDissipationParameters.add(temperatureOffset.set("temperature offset", 0.005, -0.01, 0.01));
 		parameters.add(advancedDissipationParameters);
 		smokeBuoyancyParameters.setName("smoke buoyancy");
 		smokeBuoyancyParameters.add(smokeSigma.set("sigma", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(smokeWeight.set("weight", 0.05, 0.0, 1.0));
 		smokeBuoyancyParameters.add(ambientTemperature.set("ambient temperature", 0.0, 0.0, 1.0));
-		smokeBuoyancyParameters.add(gravity.set("gravity", ofVec2f(0,0), ofVec2f(-1,-1), ofVec2f(1,1)));
+		smokeBuoyancyParameters.add(gravity.set("gravity", ofVec2f(0.01,0), ofVec2f(-.1,-.1), ofVec2f(.1,.1)));
 		parameters.add(smokeBuoyancyParameters);
 		maxValues.setName("maximum");
-		maxValues.add(clampForce.set("clampForce", 0, 0, .1));
-		maxValues.add(maxDensity.set("density", 1,0,5));
-		maxValues.add(maxVelocity.set("velocity", 1,0,10));
-		maxValues.add(maxTemperature.set("temperature", 1,0,5));
+		maxValues.add(clampForce.set("clampForce", 0.05, 0, .1));
+		maxValues.add(maxDensity.set("density", 2,0,5));
+		maxValues.add(maxVelocity.set("velocity", 4,0,10));
+		maxValues.add(maxTemperature.set("temperature", 2,0,5));
 		parameters.add(maxValues);
 		parameters.add(densityFromPressure.set("density from pressure", 0, -0.1, 0.1));
-		parameters.add(densityFromVorticity.set("density from vorticity", 0, -0.5, 0.5));
+		parameters.add(densityFromVorticity.set("density from vorticity", -0.1, -0.5, 0.5));
 	}
 	
 	//--------------------------------------------------------------
-	void ftFluidSimulation::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight, bool doFasterInternalFormat) {
+	void ftFluidSimulation::setup(int _simulationWidth, int _simulationHeight, int _densityWidth, int _densityHeight, bool _doFasterInternalFormat) {
 		simulationWidth = _simulationWidth;
 		simulationHeight = _simulationHeight;
 		densityWidth = (!_densityWidth)? simulationWidth : _densityWidth;
 		densityHeight = (!_densityHeight)? simulationHeight: _densityHeight;
 		
 		int internalFormatDensity, internalFormatVelocity, interformatPressure, internalFormatObstacle;
-		if (doFasterInternalFormat) {	 // This gives errors with ofGLUtils, but it runs around 15% faster.
+		if (_doFasterInternalFormat) {	 // This gives errors with ofGLUtils, but it runs around 15% faster.
 			internalFormatDensity = GL_RGBA32F;
 			internalFormatVelocity = GL_RG32F;
 			interformatPressure = GL_R32F;
@@ -86,8 +86,8 @@ namespace flowTools {
 		}
 		else {							 // This gives no errors
 			internalFormatDensity = GL_RGBA32F;
-			internalFormatVelocity = GL_RGBA32F;
-			interformatPressure = GL_RGBA32F;
+			internalFormatVelocity = GL_RGB32F;
+			interformatPressure = GL_RGB32F;
 			internalFormatObstacle = GL_RGB;
 		}
 		densitySwapBuffer.allocate(densityWidth,densityHeight,internalFormatDensity);
@@ -115,7 +115,7 @@ namespace flowTools {
 		addTempObstacleBufferDidChange = false;
 		combinedObstacleBuffer.allocate(simulationWidth, simulationHeight, internalFormatObstacle);
 		combinedObstacleBuffer.clear();
-		combinedObstacleBuffer.scaleIntoMe(obstacleBuffer);
+		combinedObstacleBuffer.stretchIntoMe(obstacleBuffer);
 		
 		deltaTime = 0;
 		lastTime = 0;
@@ -145,13 +145,13 @@ namespace flowTools {
 		
 		if (combinedObstacleNeedsToBeCleaned) {
 			combinedObstacleBuffer.clear();
-			combinedObstacleBuffer.scaleIntoMe(obstacleBuffer);
+			combinedObstacleBuffer.stretchIntoMe(obstacleBuffer);
 			combinedObstacleNeedsToBeCleaned = false;
 		}
 		
 		if (addTempObstacleBufferDidChange) {
 			ofEnableBlendMode(OF_BLENDMODE_ADD);
-			combinedObstacleBuffer.scaleIntoMe(addTempObstacleBuffer);
+			combinedObstacleBuffer.stretchIntoMe(addTempObstacleBuffer);
 			addTempObstacleBufferDidChange = false;
 			addTempObstacleBuffer.clear();
 			combinedObstacleNeedsToBeCleaned = true;
@@ -161,21 +161,21 @@ namespace flowTools {
 		// CLAMP LENGTH
 		if (maxDensity.get() > 0.0) {
 			clampLengthShader.update(*densitySwapBuffer.dst,
-									 densitySwapBuffer.src->getTextureReference(),
+									 densitySwapBuffer.src->getTexture(),
 									 maxDensity.get(),
 									 clampForce.get());
 			densitySwapBuffer.swap();
 		}
 		if (maxVelocity.get() > 0.0) {
 			clampLengthShader.update(*velocitySwapBuffer.dst,
-									 velocitySwapBuffer.src->getTextureReference(),
+									 velocitySwapBuffer.src->getTexture(),
 									 maxVelocity.get(),
 									 clampForce.get());
 			velocitySwapBuffer.swap();
 		}
 		if (maxTemperature.get() > 0.0) {
 			clampLengthShader.update(*temperatureSwapBuffer.dst,
-									 temperatureSwapBuffer.src->getTextureReference(),
+									 temperatureSwapBuffer.src->getTexture(),
 									 maxTemperature.get(),
 									 clampForce.get());
 			temperatureSwapBuffer.swap();
@@ -185,23 +185,23 @@ namespace flowTools {
 		// VORTEX CONFINEMENT
 		if (vorticity.get() > 0.0) {
 			vorticityFirstPassShader.update(vorticityFirstPassBuffer,
-											velocitySwapBuffer.src->getTextureReference(),
-											combinedObstacleBuffer.getTextureReference());
+											velocitySwapBuffer.src->getTexture(),
+											combinedObstacleBuffer.getTexture());
 			
 			vorticitySecondPassShader.update(vorticitySecondPassBuffer,
-											 vorticityFirstPassBuffer.getTextureReference(),
+											 vorticityFirstPassBuffer.getTexture(),
 											 timeStep,
 											 vorticity.get(),
 											 cellSize.get());
 			
-			addVelocity(vorticitySecondPassBuffer.getTextureReference());
+			addVelocity(vorticitySecondPassBuffer.getTexture());
 		}
 		
 		// ADVECT
 		advectShader.update(*velocitySwapBuffer.dst,
-							velocitySwapBuffer.src->getTextureReference(),
-							velocitySwapBuffer.src->getTextureReference(),
-							combinedObstacleBuffer.getTextureReference(),
+							velocitySwapBuffer.src->getTexture(),
+							velocitySwapBuffer.src->getTexture(),
+							combinedObstacleBuffer.getTexture(),
 							timeStep,
 							1.0 - (dissipation.get() + velocityOffset.get()),
 							cellSize.get());
@@ -209,9 +209,9 @@ namespace flowTools {
 		
 		
 		advectShader.update(*densitySwapBuffer.dst,
-							densitySwapBuffer.src->getTextureReference(),
-							velocitySwapBuffer.src->getTextureReference(),
-							combinedObstacleBuffer.getTextureReference(),
+							densitySwapBuffer.src->getTexture(),
+							velocitySwapBuffer.src->getTexture(),
+							combinedObstacleBuffer.getTexture(),
 							timeStep,
 							1.0 - (dissipation.get() + densityOffset.get()),
 							cellSize.get());
@@ -222,8 +222,8 @@ namespace flowTools {
 		if (viscosity.get() > 0.0) {
 			for (int i = 0; i < numJacobiIterations.get(); i++) {
 				diffuseShader.update(*velocitySwapBuffer.dst,
-									 velocitySwapBuffer.src->getTextureReference(),
-									 combinedObstacleBuffer.getTextureReference(),
+									 velocitySwapBuffer.src->getTexture(),
+									 combinedObstacleBuffer.getTexture(),
 									 viscosity.get() * deltaTime);
 				velocitySwapBuffer.swap();
 			}
@@ -235,24 +235,24 @@ namespace flowTools {
 		if (smokeSigma.get() > 0.0 && smokeWeight.get() > 0.0 ) {
 			
 			advectShader.update(*temperatureSwapBuffer.dst,
-								temperatureSwapBuffer.src->getTextureReference(),
-								velocitySwapBuffer.src->getTextureReference(),
-								combinedObstacleBuffer.getTextureReference(),
+								temperatureSwapBuffer.src->getTexture(),
+								velocitySwapBuffer.src->getTexture(),
+								combinedObstacleBuffer.getTexture(),
 								timeStep,
 								1.0 - (dissipation.get() + temperatureOffset.get()),
 								cellSize.get());
 			temperatureSwapBuffer.swap();
 			
 			smokeBuoyancyShader.update(smokeBuoyancyBuffer,
-									   velocitySwapBuffer.src->getTextureReference(),
-									   temperatureSwapBuffer.src->getTextureReference(),
-									   densitySwapBuffer.src->getTextureReference(),
+									   velocitySwapBuffer.src->getTexture(),
+									   temperatureSwapBuffer.src->getTexture(),
+									   densitySwapBuffer.src->getTexture(),
 									   ambientTemperature.get(),
 									   timeStep,
 									   smokeSigma.get(),
 									   smokeWeight.get(),
 									   gravity.get());
-			addVelocity(smokeBuoyancyBuffer.getTextureReference());
+			addVelocity(smokeBuoyancyBuffer.getTexture());
 	
 		}
 		else
@@ -262,16 +262,16 @@ namespace flowTools {
 		// DIVERGENCE AND JACOBI
 		divergenceBuffer.clear();
 		divergenceShader.update(divergenceBuffer,
-								velocitySwapBuffer.src->getTextureReference(),
-								combinedObstacleBuffer.getTextureReference(),
+								velocitySwapBuffer.src->getTexture(),
+								combinedObstacleBuffer.getTexture(),
 								cellSize.get());
 		
 		pressureSwapBuffer.clear();
 		for (int i = 0; i < numJacobiIterations.get(); i++) {
 			jacobiShader.update(*pressureSwapBuffer.dst,
-								pressureSwapBuffer.src->getTextureReference(),
-								divergenceBuffer.getTextureReference(),
-								combinedObstacleBuffer.getTextureReference(),
+								pressureSwapBuffer.src->getTexture(),
+								divergenceBuffer.getTexture(),
+								combinedObstacleBuffer.getTexture(),
 								cellSize.get());
 			pressureSwapBuffer.swap();
 		}
@@ -279,16 +279,16 @@ namespace flowTools {
 		// Multiply density by pressure and or vorticity
 		if(densityFromPressure != 0) {
 			densityFloatMultiplierShader.update(*densitySwapBuffer.dst,
-												densitySwapBuffer.src->getTextureReference(),
-												pressureSwapBuffer.src->getTextureReference(),
+												densitySwapBuffer.src->getTexture(),
+												pressureSwapBuffer.src->getTexture(),
 												densityFromPressure.get());
 			densitySwapBuffer.swap();
 		}
 		
 		if(densityFromVorticity != 0) {
 			densityVec2MultiplierShader.update(*densitySwapBuffer.dst,
-											   densitySwapBuffer.src->getTextureReference(),
-											   vorticitySecondPassBuffer.getTextureReference(),
+											   densitySwapBuffer.src->getTexture(),
+											   vorticitySecondPassBuffer.getTexture(),
 											   -densityFromVorticity.get());
 			densitySwapBuffer.swap();
 		}
@@ -298,16 +298,16 @@ namespace flowTools {
 		if(addPressureBufferDidChange == true) {
 			addPressureBufferDidChange = false;
 			addShader.update(*pressureSwapBuffer.dst,
-							 pressureSwapBuffer.src->getTextureReference(),
-							 addPressureBuffer.getTextureReference(),
+							 pressureSwapBuffer.src->getTexture(),
+							 addPressureBuffer.getTexture(),
 							 1.0);
 			pressureSwapBuffer.swap();
 		}
 		
 		substractGradientShader.update(*velocitySwapBuffer.dst,
-									   velocitySwapBuffer.src->getTextureReference(),
-									   pressureSwapBuffer.src->getTextureReference(),
-									   combinedObstacleBuffer.getTextureReference(),
+									   velocitySwapBuffer.src->getTexture(),
+									   pressureSwapBuffer.src->getTexture(),
+									   combinedObstacleBuffer.getTexture(),
 									   cellSize.get());
 		velocitySwapBuffer.swap();
 		
@@ -319,7 +319,7 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		addShader.update(*densitySwapBuffer.dst,
-						 densitySwapBuffer.src->getTextureReference(),
+						 densitySwapBuffer.src->getTexture(),
 						 _tex,
 						 _strength);
 		densitySwapBuffer.swap();
@@ -331,7 +331,7 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		addShader.update(*velocitySwapBuffer.dst,
-						 velocitySwapBuffer.src->getTextureReference(),
+						 velocitySwapBuffer.src->getTexture(),
 						 _tex,
 						 _strength);
 		velocitySwapBuffer.swap();
@@ -343,7 +343,7 @@ namespace flowTools {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		addShader.update(*temperatureSwapBuffer.dst,
-						 temperatureSwapBuffer.src->getTextureReference(),
+						 temperatureSwapBuffer.src->getTexture(),
 						 _tex,
 						 _strength);
 		temperatureSwapBuffer.swap();
@@ -357,7 +357,7 @@ namespace flowTools {
 		addPressureBuffer.clear();
 		
 		addShader.update(addPressureBuffer,
-						 addPressureBuffer.getTextureReference(), // dubious
+						 addPressureBuffer.getTexture(), // dubious
 						 _tex,
 						 _strength);
 		
@@ -369,7 +369,7 @@ namespace flowTools {
 	void ftFluidSimulation::addObstacle(ofTexture & _obstacleTexture){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		obstacleBuffer.scaleIntoMe(_obstacleTexture);
+		obstacleBuffer.stretchIntoMe(_obstacleTexture);
 		ofPopStyle();
 	}
 	
@@ -377,7 +377,7 @@ namespace flowTools {
 	void ftFluidSimulation::addTempObstacle(ofTexture & _obstacleTexture){
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_ADD);
-		addTempObstacleBuffer.scaleIntoMe(_obstacleTexture);
+		addTempObstacleBuffer.stretchIntoMe(_obstacleTexture);
 		addTempObstacleBufferDidChange = true;
 		ofPopStyle();
 	}
@@ -400,13 +400,20 @@ namespace flowTools {
 		combinedObstacleNeedsToBeCleaned = true;
 	}
 	
+	//--------------------------------------------------------------
+	void ftFluidSimulation::resetBackground() {
+		obstacleBuffer.clear();
+		createEdgeImage(obstacleBuffer);
+		combinedObstacleNeedsToBeCleaned = true;
+	}
+	
 	void ftFluidSimulation::createEdgeImage(ftFbo &buffer, int _edgeWidth, ofColor _backgroundColor, ofColor _edgeColor) {
 		ofPushStyle();
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		buffer.begin();
 		ofClear(_backgroundColor);
 		ofSetColor(_edgeColor);
-		ofRect(_edgeWidth, _edgeWidth, buffer.getWidth() - _edgeWidth * 2, buffer.getHeight() - _edgeWidth * 2);
+		ofDrawRectangle(_edgeWidth, _edgeWidth, buffer.getWidth() - _edgeWidth * 2, buffer.getHeight() - _edgeWidth * 2);
 		buffer.end();
 		ofPopStyle();
 	}

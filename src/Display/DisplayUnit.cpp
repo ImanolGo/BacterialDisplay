@@ -1,54 +1,54 @@
 //
-//  HaloRing.cpp
+//  DisplayUnit.cpp
 //
 //  Created by Imanol Gomez on 01/03/15.
 //
 //--------------------------------------------------------------
 
-#include "HaloRing.h"
+#include "DisplayUnit.h"
 
 
-HaloRingPreview::HaloRingPreview(const BasicVisual& visual, string id)
+DisplayUnitPreview::DisplayUnitPreview(const BasicVisual& visual, const DisplayUnitSettings& settings)
 {
     m_position = visual.getPosition();
     m_width = visual.getWidth();
     m_height = visual.getHeight();
-    m_id = id;
+    m_settings = settings;
     
     this->setup();
 }
 
-HaloRingPreview::~HaloRingPreview()
+DisplayUnitPreview::~DisplayUnitPreview()
 {
     //Intentionaly left empty
 }
 
-void HaloRingPreview::setup()
+void DisplayUnitPreview::setup()
 {
     this->setupTextVisual();
 }
 
-void HaloRingPreview::setupTextVisual()
+void DisplayUnitPreview::setupTextVisual()
 {
     string fontPath = "fonts/helvetica-neue-medium.ttf";
     float fontSize = m_width*0.25;
     
     m_textVisual = ofPtr<TextVisual>(new TextVisual(m_position,m_width,m_height,true));
-    m_textVisual->setText(m_id,fontPath,fontSize,ofColor::black);
+    m_textVisual->setText(m_settings.id,fontPath,fontSize,ofColor::black);
 }
 
-void HaloRingPreview::draw()
+void DisplayUnitPreview::draw()
 {
-    this->drawLedRing();
+    this->drawUnit();
     this->drawID();
 }
 
-void HaloRingPreview::drawLedRing()
+void DisplayUnitPreview::drawUnit()
 {
     
     ofSetCircleResolution(10);
     
-    float pixelSize = 1;
+    float pixelSize = 4;
     float margin = pixelSize*2;
     
     ofPushMatrix();
@@ -60,19 +60,19 @@ void HaloRingPreview::drawLedRing()
     //ofEllipse(m_position.x , m_position.y, m_width, m_height);
     //ofEllipse(m_position.x , m_position.y, m_width-margin*2, m_height-margin*2);
     
-    float angleStep = (2.0 * M_PI)/m_ledColors.size();
-    float offsetAngle = M_PI*0.5 - angleStep*0.5;
+    float angleStep = (2.0 * M_PI)/m_settings.numberLeds;
+    float offsetAngle = 0;
     
     ofFill();
-    for (int i = 0; i < m_ledColors.size(); i++)
+    for (int i = 0; i < m_settings.numberLeds; i++)
     {
         float angle =  i * angleStep - offsetAngle;
         angle = 2*M_PI - angle; // Inverse the angle
         float rx = m_position.x  + 0.5 * (m_width - margin) * cos(angle);
         float ry = m_position.y + 0.5 * (m_height - margin) * sin(angle);
         
-        ofSetColor(m_ledColors[i]);
-        ofCircle(rx,ry,pixelSize);
+        ofSetColor(m_ledColor[i]);
+        ofDrawCircle(rx,ry,pixelSize);
     }
     
     ofPopStyle();
@@ -80,7 +80,7 @@ void HaloRingPreview::drawLedRing()
 }
 
 //--------------------------------------------------------------
-void HaloRingPreview::drawID(bool hideText)
+void DisplayUnitPreview::drawID(bool hideText)
 {
     if (hideText) {
         return;
@@ -91,58 +91,57 @@ void HaloRingPreview::drawID(bool hideText)
 }
 
 
-void HaloRing::setHaloRingPreview(const BasicVisual& visual)
+void DisplayUnit::setDisplayUnitPreview(const BasicVisual& visual)
 {
-    m_haloRingPreview = ofPtr<HaloRingPreview>(new HaloRingPreview(visual,m_settings.id));
+    m_displayUnitPreview = ofPtr<DisplayUnitPreview>(new DisplayUnitPreview(visual,m_settings));
 }
 
-HaloRing::HaloRing(const BasicVisual& visual, const HaloRingSettings& settings): BasicVisual(), m_margin(0.0)
+DisplayUnit::DisplayUnit(const BasicVisual& visual, const DisplayUnitSettings& settings): BasicVisual(), m_margin(0.0)
 {
     m_position = visual.getPosition();
     m_width = visual.getWidth();
     m_height = visual.getHeight();
     m_settings = settings;
     
-    m_haloRingPreview = ofPtr<HaloRingPreview>(new HaloRingPreview(visual,m_settings.id));
+    m_displayUnitPreview = ofPtr<DisplayUnitPreview>(new DisplayUnitPreview(visual,m_settings));
     
     this->setup();
 }
 
-HaloRing::~HaloRing()
+DisplayUnit::~DisplayUnit()
 {
     //Intentionaly left empty
 }
 
 
-void HaloRing::setup()
+void DisplayUnit::setup()
 {
-    this->setupLedRing();
+    this->setupDisplayUnit();
     this->setupTextVisual();
 }
 
-void HaloRing::setupLedRing()
+void DisplayUnit::setupDisplayUnit()
 {
-    // Set the pixel data
-    //m_screenPixels.allocate(m_width, m_height,GL_RGB);
+    
+    m_ledColor = ofColor::black;
     
     float angleStep = (2.0 * M_PI)/m_settings.numberLeds;
-    float offsetAngle = M_PI*0.5 - angleStep*0.5;
+    float offsetAngle = 0;
     m_margin = 10;
     
     for (int i = 0; i < m_settings.numberLeds; i++)
     {
         float angle =  i * angleStep - offsetAngle;
         angle = 2*M_PI - angle; // Inverse the angle
+        float rx = m_position.x  + 0.5 * (m_width - m_margin) * cos(angle);
+        float ry = m_position.y + 0.5 * (m_height - m_margin) * sin(angle);
         
-        // Generate the position of the grabber points
-        float rx = m_position.x  + 0.5 * (m_width-m_margin) * cos(angle);
-        float ry = m_position.y + 0.5 * (m_height-m_margin) * sin(angle);
         m_ledPositions.push_back(ofVec2f(rx,ry));
-        m_ledColors.push_back(ofColor::black);
     }
+
 }
 
-void HaloRing::setupTextVisual()
+void DisplayUnit::setupTextVisual()
 {
     string fontPath = "fonts/helvetica-neue-medium.ttf";
     float fontSize = m_width*0.25;
@@ -154,20 +153,20 @@ void HaloRing::setupTextVisual()
 
 //--------------------------------------------------------------
 
-void HaloRing::setPixels(const ofRectangle& grabArea, const ofPixels& screenPixels)
+void DisplayUnit::setPixels(const ofRectangle& grabArea, const ofPixels& screenPixels)
 {
     for (int i = 0; i < m_ledPositions.size(); i++)
     {
         float x = m_ledPositions[i].x  - grabArea.x;
         float y = m_ledPositions[i].y  - grabArea.y;
-        m_ledColors[i] = screenPixels.getColor(x, y);
+        m_ledColor[i] = screenPixels.getColor(x, y).getBrightness();
     }
     
-    m_haloRingPreview->setColors(m_ledColors);
+    m_displayUnitPreview->setColor(m_ledColor);
 }
 
 //--------------------------------------------------------------
-void HaloRing::drawGrabRegion(bool hideArea)
+void DisplayUnit::drawGrabRegion(bool hideArea)
 {
     ofPushStyle();
     ofNoFill();
@@ -182,20 +181,20 @@ void HaloRing::drawGrabRegion(bool hideArea)
         ofSetColor(0, 175);
     }
     
-    ofEllipse(m_position.x, m_position.y, m_width, m_height);
-    ofEllipse(m_position.x, m_position.y, m_width-m_margin*2, m_height-m_margin*2);
+    ofDrawEllipse(m_position.x, m_position.y, m_width, m_height);
+    ofDrawEllipse(m_position.x, m_position.y, m_width-m_margin*2, m_height-m_margin*2);
     
     ofSetLineWidth(1);
     for (int i = 0; i < m_ledPositions.size(); i++)
     {
-        ofCircle(m_ledPositions[i],2);
+        ofDrawCircle(m_ledPositions[i],2);
     }
     
     ofPopStyle();
 }
 
 //--------------------------------------------------------------
-void HaloRing::drawID(bool hideText)
+void DisplayUnit::drawID(bool hideText)
 {
     if (hideText) {
         return;
@@ -205,9 +204,9 @@ void HaloRing::drawID(bool hideText)
     m_textVisual->draw();
 }
 
-void HaloRing::draw()
+void DisplayUnit::draw()
 {
-    m_haloRingPreview->draw();
+    m_displayUnitPreview->draw();
     //this->drawGrabRegion();
     this->drawID();
 }

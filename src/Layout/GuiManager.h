@@ -52,8 +52,6 @@ private:
 
     void setupCameraGui();
     
-    void setupFluidGui();
-    
 private:
     
     // Fluid GUI
@@ -68,16 +66,7 @@ private:
     ofParameter<string> visualisationName;
     int					numVisualisationModes;
     string				*visualisationModeTitles;
-    ofParameterGroup	visualisationParameters;
-    
-    ofParameter<bool>	doResetDrawForces;
-    ofParameterGroup	leftButtonParameters;
-    ofParameter<bool>	showScalar;
-    ofParameter<bool>	showField;
-    ofParameter<float>	displayScalarScale;
-    ofParameter<float>	velocityFieldArrowScale;
-    ofParameter<float>	temperatureFieldBarScale;
-    ofParameter<bool>	visualisationLineSmooth;
+
     
     ofParameterGroup	pictureCalibrationParameters;
     ofParameter<float>	offsetX;

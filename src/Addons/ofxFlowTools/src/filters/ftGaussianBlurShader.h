@@ -9,16 +9,18 @@ namespace flowTools {
 
 	class ftGaussianBlurShader : public ftShader {
 	public:
-		
-		ofParameterGroup	parameters;
 		ftGaussianBlurShader(){
+			bInitialized = 1;
 			
-			ofLogVerbose("init ftGaussianBlurShader");
-			internalFormat = GL_RGBA;
-			if (isProgrammableRenderer)
+			if (ofIsGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftGaussianBlurShader initialized");
+			else
+				ofLogWarning("ftGaussianBlurShader failed to initialize");
 		}
 		
 	protected:
@@ -49,8 +51,8 @@ namespace flowTools {
 														  }
 														  );
 			blurShader[0].unload();
-			blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
-			blurShader[0].linkProgram();
+			bInitialized *= blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
+			bInitialized *= blurShader[0].linkProgram();
 			
 			string fragmentVerticalBlurShader = GLSL120(
 														uniform sampler2DRect backbuffer;
@@ -78,8 +80,8 @@ namespace flowTools {
 														}
 														);
 			blurShader[1].unload();
-			blurShader[1].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentVerticalBlurShader);
-			blurShader[1].linkProgram();
+			bInitialized *= blurShader[1].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentVerticalBlurShader);
+			bInitialized *= blurShader[1].linkProgram();
 
 			
 		}
@@ -114,10 +116,10 @@ namespace flowTools {
 														  }
 														  );
 			blurShader[0].unload();
-			blurShader[0].setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
-			blurShader[0].bindDefaults();
-			blurShader[0].linkProgram();
+			bInitialized *= blurShader[0].setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
+			bInitialized *= blurShader[0].bindDefaults();
+			bInitialized *= blurShader[0].linkProgram();
 			
 			string fragmentVerticalBlurShader = GLSL150(
 														uniform sampler2DRect backbuffer;
@@ -148,10 +150,10 @@ namespace flowTools {
 														}
 														);
 			blurShader[1].unload();
-			blurShader[1].setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			blurShader[1].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentVerticalBlurShader);
-			blurShader[1].bindDefaults();
-			blurShader[1].linkProgram();
+			bInitialized *= blurShader[1].setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= blurShader[1].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentVerticalBlurShader);
+			bInitialized *= blurShader[1].bindDefaults();
+			bInitialized *= blurShader[1].linkProgram();
 		}
 		
 	public:
@@ -159,21 +161,21 @@ namespace flowTools {
 		void update(ofFbo& _buffer, int _passes, int _radius){
 			if (pingPong.getWidth() != _buffer.getWidth() ||
 				pingPong.getHeight() != _buffer.getHeight() ||
-				pingPong.getInternalFormat() != _buffer.getTextureReference().getTextureData().glTypeInternal) {
+				pingPong.getInternalFormat() != _buffer.getTexture().getTextureData().glInternalFormat) {
 				
-				allocate(_buffer.getWidth(),  _buffer.getHeight(), _buffer.getTextureReference().getTextureData().glTypeInternal );
+				allocate(_buffer.getWidth(),  _buffer.getHeight(), _buffer.getTexture().getTextureData().glInternalFormat );
 				
 			}
 			
 			
 			pingPong.clear();
-			pingPong.src->scaleIntoMe(_buffer);
+			pingPong.src->stretchIntoMe(_buffer);
 	
 			for(int i = 0; i < _passes; i++) {
 				for(int j = 0; j < 2; j++) {
 					pingPong.dst->begin();
 					blurShader[j].begin();
-					blurShader[j].setUniformTexture("backbuffer", pingPong.src->getTextureReference(), 0 );
+					blurShader[j].setUniformTexture("backbuffer", pingPong.src->getTexture(), 0 );
 					blurShader[j].setUniform1f("radius", _radius);
 					renderFrame(pingPong.getWidth(), pingPong.getHeight());
 					blurShader[j].end();
@@ -188,6 +190,7 @@ namespace flowTools {
 			_buffer.end();
 		}
 		
+		ofParameterGroup	parameters;
 	protected:
 		
 		void allocate(int _width, int _height, int _internalFormat = GL_RGBA){

@@ -17,7 +17,7 @@ class DisplayUnitSettings {
     
     public:
     
-    DisplayUnitSettings(): numberLeds(0), id(""), fadeCandyInd(1), channel(1), positionIndex(0){}
+    DisplayUnitSettings(): numberLeds(1), id(""), fadeCandyInd(1), channel(1), index(0){}
     
     ~DisplayUnitSettings(){}
     
@@ -28,7 +28,7 @@ class DisplayUnitSettings {
     string      id;
     int         fadeCandyInd;
     int         channel;
-    int         positionIndex;
+    int         index;
 
     
 };
@@ -37,13 +37,13 @@ class DisplayUnitPreview: public BasicVisual {
     
 public:
     
-    DisplayUnitPreview(const BasicVisual& visual, string id);
+    DisplayUnitPreview(const BasicVisual& visual, const DisplayUnitSettings& settings);
     
     virtual ~DisplayUnitPreview();
     
     virtual void draw();
     
-    void setColors(const vector <ofColor>& colors ) {m_ledColors = colors;}
+    void setColor(const ofColor& color ) {m_ledColor = color;}
     
 private:
     
@@ -51,15 +51,17 @@ private:
     
     void setupTextVisual();
     
-    void drawLedRing();
+    void drawUnit();
     
     void drawID(bool hideText = false);
     
+
 private:
     
-    vector <ofColor> m_ledColors;
+    // Hold the Captured monochromatic colors in a RGB pixel
+    ofColor m_ledColor;
     
-    string     m_id;
+    DisplayUnitSettings m_settings;
     
     ofPtr<TextVisual>  m_textVisual;
     
@@ -76,21 +78,23 @@ class DisplayUnit: public BasicVisual {
         void setPixels(const ofRectangle& grabArea, const ofPixels& screenPixels);
         void draw();
     
-        string getId(){return m_settings.id;}
+        string getId() const {return m_settings.id;}
     
-        int getChannel(){return m_settings.channel;}
+        int getChannel() const {return m_settings.channel;}
     
-        int getFadeCandyNum(){return m_settings.fadeCandyInd;}
+        int getFadeCandyNum() const {return m_settings.fadeCandyInd;}
+    
+        int getIndex() const {return m_settings.index;}
     
         void setDisplayUnitPreview(const BasicVisual& visual);
 
     
         // Return Data Method
-        const vector <ofColor>& colorData(){return m_ledColors;}
+        const ofColor& colorData(){return m_ledColor;}
     
     private:
     
-        void setupLedRing();
+        void setupDisplayUnit();
     
         void setupTextVisual();
     
@@ -100,14 +104,14 @@ class DisplayUnit: public BasicVisual {
     
     private:
             
-        // Hold the Captured Colors
-        vector <ofColor> m_ledColors;
+        // Hold the Captured monochromatic colors in a RGB pixel
+        ofColor m_ledColor;
     
         // Hold the Position of our Capture points
         vector <ofVec2f> m_ledPositions;
     
-        DisplayUnitSettings            m_settings;
-        ofPtr<DisplayUnitPreview>     m_DisplayUnitPreview;
+        DisplayUnitSettings           m_settings;
+        ofPtr<DisplayUnitPreview>     m_displayUnitPreview;
     
         ofPtr<TextVisual>  m_textVisual;
     

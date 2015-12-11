@@ -38,10 +38,10 @@ namespace flowTools {
 	
 	ftOpticalFlow::ftOpticalFlow(){
 		parameters.setName("optical flow");
-		parameters.add(strength.set("strength", 1, 0, 100));
+		parameters.add(strength.set("strength", 50, 0, 100));
 		parameters.add(offset.set("offset", 3, 1, 10));
-		parameters.add(lambda.set("labda", 0.01, 0, 0.1));
-		parameters.add(threshold.set("treshold", 0.04, 0, 0.2));
+		parameters.add(lambda.set("lambda", 0.01, 0, 0.1));
+		parameters.add(threshold.set("threshold", 0.02, 0, 0.2));
 		parameters.add(doInverseX.set("inverse x", false));
 		parameters.add(doInverseY.set("inverse y", false));
 		parameters.add(doTimeBlurDecay.set("do time blur", true));
@@ -50,7 +50,7 @@ namespace flowTools {
 		timeBlurParameters.add(timeBlurRadius.set("Decay Blur Radius", 2, 0, 10));
 		parameters.add(timeBlurParameters);
 		
-		flowVectorsDidUpdate = false;
+//		flowVectorsDidUpdate = false;
 		lastTime = ofGetElapsedTimef();
 	};
 	
@@ -67,8 +67,8 @@ namespace flowTools {
 		decayBuffer.allocate(width, height, GL_RGB32F);
 		decayBuffer.clear();
 		
-		flowVectors = new ofVec2f[int(width * height)];
-		flowFloats = new float [int(width * height) * 2];
+//		flowVectors = new ofVec2f[int(width * height)];
+//		flowFloats = new float [int(width * height) * 2];
 		
 		bSourceSet = false;
 	};
@@ -82,7 +82,7 @@ namespace flowTools {
 		lastTime = time;
 		timeStep = deltaTime * strength.get();
 		
-		flowVectorsDidUpdate = false;
+//		flowVectorsDidUpdate = false;
 		
 		float inverseX = 1;
 		if (doInverseX)inverseX = -1;
@@ -93,8 +93,8 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
 		opticalFlowShader.update(velocityBuffer,
-								 sourceSwapBuffer.src->getTextureReference(),
-								 sourceSwapBuffer.dst->getTextureReference(),
+								 sourceSwapBuffer.src->getTexture(),
+								 sourceSwapBuffer.dst->getTexture(),
 								 timeStep,
 								 offset.get(),
 								 lambda.get(),
@@ -113,17 +113,19 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_DISABLED);
 		
 		sourceSwapBuffer.swap();
-		sourceSwapBuffer.src->scaleIntoMe(_tex);
+		sourceSwapBuffer.src->stretchIntoMe(_tex);
 		
 		if (!bSourceSet) { // on start set both buffers
 			bSourceSet = true;
-			sourceSwapBuffer.dst->scaleIntoMe(_tex);
+			sourceSwapBuffer.dst->stretchIntoMe(_tex);
 		}
 		
 		ofPopStyle();
 		
 	}
 	
+/* MOVED TO FTAVERAGEVELOCITY
+ 
 	ofVec2f* ftOpticalFlow::getFlowVectors(){
 		if (!flowVectorsDidUpdate) {
 			velocityBuffer.bind();
@@ -148,5 +150,6 @@ namespace flowTools {
 		avgFlow /= width * height;
 		return avgFlow;
 	}
+ */
 	
 }

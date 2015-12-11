@@ -12,14 +12,19 @@ namespace flowTools {
 		
 		ofParameterGroup	parameters;
 		ftTimeBlurShader(){
-			ofLogVerbose("init ftTimeBlurShader");
-			
 			internalFormat = GL_RGBA;
 			
-			if (isProgrammableRenderer)
+			bInitialized = 1;
+			
+			if (ofIsGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftTimeBlurShader initialized");
+			else
+				ofLogWarning("ftTimeBlurShader failed to initialize");
 		}
 		
 	protected:
@@ -50,8 +55,8 @@ namespace flowTools {
 													   }
 													   );
 			blurShader[0].unload();
-			blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
-			blurShader[0].linkProgram();
+			bInitialized *= blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
+			bInitialized *= blurShader[0].linkProgram();
 			
 			string fragmentVerticalBlurShader = GLSL120(
 													 uniform sampler2DRect backbuffer;
@@ -79,8 +84,8 @@ namespace flowTools {
 													 }
 													 );
 			blurShader[1].unload();
-			blurShader[1].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentVerticalBlurShader);
-			blurShader[1].linkProgram();
+			bInitialized *= blurShader[1].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentVerticalBlurShader);
+			bInitialized *= blurShader[1].linkProgram();
 		}
 		
 		void glThree() {
@@ -114,9 +119,9 @@ namespace flowTools {
 													   }
 													   );
 			blurShader[0].unload();
-			blurShader[0].setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
-			blurShader[0].linkProgram();
+			bInitialized *= blurShader[0].setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= blurShader[0].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentHorizontalBlurShader);
+			bInitialized *= blurShader[0].linkProgram();
 			
 			string fragmentVerticalBlurShader = GLSL150(
 													 uniform sampler2DRect backbuffer;
@@ -147,9 +152,9 @@ namespace flowTools {
 													 }
 													 );
 			blurShader[1].unload();
-			blurShader[1].setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			blurShader[1].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentVerticalBlurShader);
-			blurShader[1].linkProgram();
+			bInitialized *= blurShader[1].setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= blurShader[1].setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentVerticalBlurShader);
+			bInitialized *= blurShader[1].linkProgram();
 			
 		}
 
@@ -159,8 +164,8 @@ namespace flowTools {
 		void update(ofFbo& _buffer, float _decay, int _radius = 5, int _passes = 1){
 			if (pingPong.getWidth() != _buffer.getWidth() ||
 				pingPong.getHeight() != _buffer.getHeight() ||
-				pingPong.getInternalFormat() != _buffer.getTextureReference().getTextureData().glTypeInternal) {
-				pingPong.allocate(_buffer.getWidth(),  _buffer.getHeight(), _buffer.getTextureReference().getTextureData().glTypeInternal );
+				pingPong.getInternalFormat() != _buffer.getTexture().getTextureData().glInternalFormat) {
+				pingPong.allocate(_buffer.getWidth(),  _buffer.getHeight(), _buffer.getTexture().getTextureData().glInternalFormat );
 				
 			}
 			
@@ -169,7 +174,7 @@ namespace flowTools {
 			ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 			pingPong.src->begin();
 			ofSetColor(0,0,0,255 * _decay);
-			ofRect(0,0, pingPong.getWidth(), pingPong.getHeight());
+			ofDrawRectangle(0,0, pingPong.getWidth(), pingPong.getHeight());
 			ofEnableBlendMode(OF_BLENDMODE_ADD);
 			ofSetColor(255, 255, 255, 255);
 			_buffer.draw(0,0, pingPong.getWidth(), pingPong.getHeight());
@@ -180,7 +185,7 @@ namespace flowTools {
 				for(int j = 0; j < 2; j++) {
 					pingPong.dst->begin();
 					blurShader[j].begin();
-					blurShader[j].setUniformTexture("backbuffer", pingPong.src->getTextureReference(), 0 );
+					blurShader[j].setUniformTexture("backbuffer", pingPong.src->getTexture(), 0 );
 					blurShader[j].setUniform1f("radius", _radius);
 					renderFrame(pingPong.getWidth(), pingPong.getHeight());
 					blurShader[j].end();

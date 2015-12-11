@@ -10,11 +10,17 @@ namespace flowTools {
 	class ftDisplayScalarShader : public ftShader {
 	public:
 		ftDisplayScalarShader() {
+			bInitialized = 1;
 			
-			if (isProgrammableRenderer)
+			if (ofIsGLProgrammableRenderer())
 				glThree();
 			else
 				glTwo();
+			
+			if (bInitialized)
+				ofLogNotice("ftDisplayScalarShader initialized");
+			else
+				ofLogWarning("ftDisplayScalarShader failed to initialize");
 		}
 		
 	protected:
@@ -24,15 +30,15 @@ namespace flowTools {
 									   uniform float Scale;
 									   void main(){
 										   vec4	velocity = texture2DRect(FloatTexture, gl_TexCoord[0].st);
-										   velocity.xyz += vec3(0.5 / Scale);
 										   velocity.xyz *= vec3(Scale);
+										   velocity.xyz += vec3(0.5);
 										   velocity.w = 1.0;
 										   gl_FragColor = velocity;
 									   }
 									   );
 			
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.linkProgram();
 		}
 		
 		void glThree() {
@@ -47,17 +53,17 @@ namespace flowTools {
 								  void main(){
 									  vec2 st = texCoordVarying;
 									  vec4	velocity = texture(FloatTexture, st);
-									  velocity.xyz += vec3(0.5 / Scale);
 									  velocity.xyz *= vec3(Scale);
-									  velocity.w = 1.0;
+									  velocity.w = pow(length(velocity.xyz), 0.33); //WHY? NOT IN 120
+									  velocity.xyz += vec3(0.5);
 									  fragColor = velocity;
 								  }
 								  );
 			
-			shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
-			shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
-			shader.bindDefaults();
-			shader.linkProgram();
+			bInitialized *= shader.setupShaderFromSource(GL_VERTEX_SHADER, vertexShader);
+			bInitialized *= shader.setupShaderFromSource(GL_FRAGMENT_SHADER, fragmentShader);
+			bInitialized *= shader.bindDefaults();
+			bInitialized *= shader.linkProgram();
 			
 		}
 	

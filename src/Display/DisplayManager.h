@@ -1,5 +1,5 @@
 /*
- *  HaloManager.h
+ *  DisplayManager.h
  *  Bacterial Display
  *
  *  Created by Imanol Gomez on 07/12/15.
@@ -10,20 +10,20 @@
 #pragma once
 
 #include "Manager.h"
-#include "HaloRing.h"
+#include "DisplayUnit.h"
 #include "DisplayFadeCandy.h"
-#include "HaloVisuals.h"
+#include "DisplayVisuals.h"
 #include "ofxOPC.h"
 
-//========================== class HaloManager ==============================
+//========================== class DisplayManager ==============================
 //============================================================================
-/** \class HaloManager HaloManager.h
+/** \class DisplayManager DisplayManager.h
  *	\brief Class managing the halo light rings
  *	\details it creates and updates the halo rings
  */
 
 
-class HaloManager: public Manager
+class DisplayManager: public Manager
 {
     static const int NUM_FADE_CANDYS;
     static const int NUM_HALO_RINGS;
@@ -32,10 +32,10 @@ class HaloManager: public Manager
     public:
 
         //! Constructor
-        HaloManager();
+        DisplayManager();
 
         //! Destructor
-        ~HaloManager();
+        ~DisplayManager();
 
         //! Setup the Halo Manager
         void setup();
@@ -47,29 +47,29 @@ class HaloManager: public Manager
         void draw();
     
         //! Set the mode of the Halo Visuals
-        void setMode(int mode) {m_haloVisuals.setMode(mode);}
+        void setMode(int mode) {m_displayVisuals.setMode(mode);}
     
         const ofRectangle& getRingArea() const {return m_imageSpaceRectangle;}
     
-        HaloVisuals& getHaloVisuals(){return m_haloVisuals;}
+        DisplayVisuals& getDisplayVisuals(){return m_displayVisuals;}
     
-        void showRingsPreview(bool show){m_showRingsPreview=show;}
+        void showDisplayPreview(bool show){m_showDisplayPreview=show;}
 
     private:
     
         void grabImageData();
     
-        void setupHaloRings();
+        void setupDisplayUnits();
     
         void setupOPC();
     
-        void createHaloRings();
+        void createDisplayUnitSettings();
     
-        void createHaloRingsPositions();
+        void createDisplayUnits();
     
-        ofPtr<HaloRing> createSingleHaloRing(const HaloRingSettings& settings);
+        ofPtr<DisplayUnit> createSingleDisplayUnit(int id);
     
-        void addHaloRing(ofPtr<HaloRing> haloRing);
+        void addDisplayUnit(ofPtr<DisplayUnit> DisplayUnit);
     
         void updateFadeCandys();
     
@@ -80,26 +80,28 @@ class HaloManager: public Manager
     private:
     
         typedef             ofPtr<DisplayFadeCandy>            DisplayFadeCandyPtr;
-        typedef             map<int,DisplayFadeCandyPtr>       DisplayFadeCandyMap;            ///< defines a map of Halo Rings attached to its id
-        typedef             map<int,ofVec3f>                HaloRingPositionMap;    ///< defines a map of Halo Rings position attached to relative position index
+        typedef             map<int,DisplayFadeCandyPtr>       DisplayFadeCandyMap;            ///< defines a map of Display Unit attached to its id
+        typedef             map<int,ofVec3f>                   DisplayUnitPositionMap;    ///< defines a map of Display Unit position attached to relative id
+        typedef             map<int,DisplayUnitSettings>       DisplayUnitSettingsMap;    ///< defines a map of Display Unit settings attached to relative id 
     
-        HaloRingPositionMap m_haloRingsPositionMap;
-        HaloRingPositionMap m_haloRingsPreviewPositionMap;
+        DisplayUnitPositionMap m_displayUnitsPositionMap;
+        DisplayUnitPositionMap m_displayUnitsPreviewPositionMap;
+        DisplayUnitSettingsMap m_displayUnitsSettings;
 
-        DisplayFadeCandyMap    m_DisplayFadeCandys;
-        ofxOPC              m_opcClient;                    ///< instance of the Open Pixel Control client
-        HaloVisuals         m_haloVisuals;
+        DisplayFadeCandyMap    m_displayFadeCandys;
+        ofxOPC                 m_opcClient;                    ///< instance of the Open Pixel Control client
+        DisplayVisuals         m_displayVisuals;
     
         // Capture Objects
         ofImage     m_screenImage;
         ofPixels    m_screenPixels;
     
-        float               m_ringSize;
-        float               m_ringPreviewSize;
+        float               m_displayUnitSize;
+        float               m_displayUnitPreviewSize;
         ofRectangle         m_imageSpaceRectangle;
         ofRectangle         m_previewRectangle;
     
-        bool                m_showRingsPreview;
+        bool                m_showDisplayPreview;
 
 };
 

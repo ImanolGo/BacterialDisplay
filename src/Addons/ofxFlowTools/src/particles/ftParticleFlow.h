@@ -16,7 +16,7 @@ namespace flowTools {
 	public:
 		ftParticleFlow();
 		
-		void setup(int _simulationWidth, int _simulationHeight, int _numParticlesX = 0, int _numParticlesY = 0);
+		void setup(int _simulationWidth, int _simulationHeight, int _numParticlesX, int _numParticlesY, bool _doFasterInternalFormat = 0);
 		
 		void addFlowVelocity(ofTexture& _tex, float _strength = 1.0) ;
 		void addFluidVelocity (ofTexture& _tex, float _strength = 1.0) ;
@@ -65,21 +65,21 @@ namespace flowTools {
 		ofParameter<float>	massSpread;
 		ofParameter<float>	size;
 		ofParameter<float>	sizeSpread;
+		ofParameter<float>	twinkleSpeed;
 		
-		float simulationWidth;
-		float simulationHeight;
-		float numParticlesX;
-		float numParticlesY;
-		int numParticles;
-		float deltaTime;
-		float lastTime;
-		float timeStep;
+		float	simulationWidth;
+		float	simulationHeight;
+		float	numParticlesX;
+		float	numParticlesY;
+		int		numParticles;
+		float	deltaTime;
+		float	lastTime;
+		float	timeStep;
 		
 		ofTexture *flowVelocityTexture;
 		ofTexture *fluidVelocityTexture;
 		ofTexture *colorTexture;
 		
-//		GLuint		ParticleLutVbo;
 		ofVboMesh	particleMesh;
 		
 		ftSwapBuffer			particleAgeLifespanMassSizeSwapBuffer;
@@ -97,10 +97,6 @@ namespace flowTools {
 		ftMoveParticleShader	moveParticleShader;
 		ftAgeLifespanMassSizeParticleShader	ALMSParticleShader;
 		ftAddForceShader		addShader;
-		
-		ofVbo particles;
-		
-		ofFbo drawFbo;
 	};
 		
 }

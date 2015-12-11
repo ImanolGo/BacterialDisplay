@@ -4,7 +4,7 @@
  *
  *  Created by Imanol Gomez on 07/12/15.
  *
- */------------------------------------------------------------
+ */
 
 #include "ofxOPC.h"
 #include "DisplayFadeCandy.h"
@@ -34,26 +34,27 @@ void DisplayFadeCandy::createLedColorVector()
     m_ledColors = vector <ofColor> (size,ofColor::black);
 }
 
-void DisplayFadeCandy::addHaloRing(ofPtr<HaloRing> haloRing)
+void DisplayFadeCandy::addDisplayUnit(ofPtr<DisplayUnit> displayUnit)
 {
-    if (haloRing!= NULL) {
-        m_haloRings[haloRing->getId()] = haloRing;
+    if (displayUnit!= NULL) {
+        m_displayUnits[displayUnit->getId()] = displayUnit;
     }
     
 }
 
-void DisplayFadeCandy::updateHaloRings(const ofRectangle &grabArea, const ofPixels &screenPixels)
+void DisplayFadeCandy::updateDisplayUnits(const ofRectangle &grabArea, const ofPixels &screenPixels)
 {
-    for(HaloRingsMap::iterator it = m_haloRings.begin(); it != m_haloRings.end(); it++){
+    for(DisplayUnitsMap::iterator it = m_displayUnits.begin(); it != m_displayUnits.end(); it++){
         
         int channel = it->second->getChannel();
         
         if (channel > 0 && channel <= FADE_CANDY_NUM_CHANNELS ) {
-            int offset = (channel-1)*LEDS_PER_CHANNEL;
+            int i = (channel-1)*LEDS_PER_CHANNEL + it->second->getIndex();
             
             it->second->setPixels(grabArea, screenPixels);
-            vector<ofColor> colorData =  it->second->colorData();
-            std::copy ( colorData.begin(), colorData.end(), m_ledColors.begin() + offset);
+            m_ledColors[i] = it->second->colorData();
+            //vector<ofColor> colorData =  it->second->colorData();
+            //std::copy ( colorData.begin(), colorData.end(), m_ledColors.begin() + offset);
 
         }
     }
@@ -62,12 +63,12 @@ void DisplayFadeCandy::updateHaloRings(const ofRectangle &grabArea, const ofPixe
 
 void DisplayFadeCandy::draw()
 {
-    this->drawHaloRings();
+    this->drawDisplayUnits();
 }
 
-void DisplayFadeCandy::drawHaloRings()
+void DisplayFadeCandy::drawDisplayUnits()
 {
-    for(HaloRingsMap::iterator it = m_haloRings.begin(); it != m_haloRings.end(); it++){
+    for(DisplayUnitsMap::iterator it = m_displayUnits.begin(); it != m_displayUnits.end(); it++){
         it->second->draw();
     }
 }

@@ -42,7 +42,7 @@ void AppManager::createManagers()
     m_viewManager = ofPtr<ViewManager>(new ViewManager());
     m_layoutManager = ofPtr<LayoutManager>(new LayoutManager());
     m_keyboardManager = ofPtr<KeyboardManager>(new KeyboardManager());
-    m_DisplayManager = ofPtr<DisplayManager>(new DisplayManager());
+    m_displayManager = ofPtr<DisplayManager>(new DisplayManager());
     m_cameraTrackingManager = ofPtr<CameraTrackingManager>(new CameraTrackingManager());
     m_guiManager = ofPtr<GuiManager>(new GuiManager());
 }
@@ -84,7 +84,7 @@ void AppManager::setupManagers()
     m_layoutManager->setup();
     m_keyboardManager->setup();
     m_cameraTrackingManager->setup();
-    m_DisplayManager->setup();
+    m_displayManager->setup();
     m_guiManager->setup();
 
 }
@@ -93,7 +93,7 @@ void AppManager::update()
 {
     m_visualEffectsManager->update();
     m_viewManager->update();
-    m_DisplayManager->update();
+    m_displayManager->update();
     m_cameraTrackingManager->update();
 }
 
@@ -101,7 +101,7 @@ void AppManager::update()
 void AppManager::draw()
 {
     m_viewManager->draw();
-    m_DisplayManager->draw();
+    m_displayManager->draw();
     m_cameraTrackingManager->draw();
     m_guiManager->draw();
     
@@ -127,7 +127,7 @@ void AppManager::setDebugMode(bool showDebug)
         ofSetLogLevel(OF_LOG_NOTICE);
     }
     
-    m_DisplayManager->showRingsPreview(m_debugMode);
+    m_displayManager->showDisplayPreview(m_debugMode);
     m_guiManager->showGui(m_debugMode);
     m_cameraTrackingManager->showCamera(m_debugMode);
     

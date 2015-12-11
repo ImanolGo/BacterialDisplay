@@ -34,7 +34,7 @@
 
 namespace flowTools {
 	
-	void	ftVelocityMask::setup(int _width, int _height){
+	void ftVelocityMask::setup(int _width, int _height){
 		width = _width;
 		height = _height;
 		
@@ -44,11 +44,14 @@ namespace flowTools {
 		luminanceMaskFbo.allocate(width, height, GL_RGB);
 		luminanceMaskFbo.clear();
 		
+		bVelocityTextureSet = false;
+		bDensityTextureSet = false;
+		
 		parameters.setName("velocity mask");
-		parameters.add(strength.set("strength", 1, 0, 10));
-		parameters.add(saturation.set("saturation", 1, 1, 5));
-		parameters.add(blurPasses.set("blur passes", 1, 0, 10));
-		parameters.add(blurRadius.set("blur radius", 6, 0, 10));
+		parameters.add(strength.set("strength", 5.5, 0, 10));
+		parameters.add(saturation.set("saturation", 3, 1, 5));
+		parameters.add(blurPasses.set("blur passes", 3, 0, 10));
+		parameters.add(blurRadius.set("blur radius", 5, 0, 10));
 		
 	};
 	
@@ -57,27 +60,36 @@ namespace flowTools {
 		ofEnableBlendMode(OF_BLENDMODE_ALPHA);
 		colorMaskSwapBuffer.clear();
 		
-		VelocityMaskShader.update(*colorMaskSwapBuffer.src, *densityTexture, *velocityTexture, strength.get());
-		HSLShader.update(*colorMaskSwapBuffer.dst,
-						 colorMaskSwapBuffer.src->getTextureReference(),
-						 0,
-						 saturation.get(),
-						 1);
-		colorMaskSwapBuffer.swap();
-
-		if (blurPasses.get() > 0 && blurRadius.get() > 0) {
-			gaussianBlurShader.update(*colorMaskSwapBuffer.src, blurPasses.get(), blurRadius.get());
+		if (!bVelocityTextureSet || !bDensityTextureSet) {
+			ofLogVerbose("ftVelocityMask: velocity or density texture not set, can't update");
 		}
-		luminanceShader.update(luminanceMaskFbo, colorMaskSwapBuffer.src->getTextureReference());
+		else {
+			VelocityMaskShader.update(*colorMaskSwapBuffer.src, *densityTexture, *velocityTexture, strength.get());
+			HSLShader.update(*colorMaskSwapBuffer.dst,
+							 colorMaskSwapBuffer.src->getTexture(),
+							 0,
+							 saturation.get(),
+							 1);
+			colorMaskSwapBuffer.swap();
+			
+			if (blurPasses.get() > 0 && blurRadius.get() > 0) {
+				gaussianBlurShader.update(*colorMaskSwapBuffer.src, blurPasses.get(), blurRadius.get());
+			}
+			
+			ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+			luminanceShader.update(luminanceMaskFbo, colorMaskSwapBuffer.src->getTexture());
+		}
 		
 		ofPopStyle();
 	}
 	
 	void ftVelocityMask::setDensity(ofTexture &tex) {
 		densityTexture = &tex;
+		bDensityTextureSet = true;
 	}
 	
 	void ftVelocityMask::setVelocity(ofTexture &tex) {
 		velocityTexture = &tex;
+		bVelocityTextureSet = true;
 	}
 }

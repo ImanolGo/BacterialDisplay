@@ -1,4 +1,5 @@
 #include "ofxButton.h"
+using namespace std;
 
 ofxButton::ofxButton(){
 	value.setSerializable(false);
@@ -8,7 +9,7 @@ ofxButton::~ofxButton(){
 	//
 }
 
-ofxButton* ofxButton::setup(string toggleName, float width, float height){
+ofxButton* ofxButton::setup(const std::string& toggleName, float width, float height){
 	setName(toggleName);
 	b.x = 0;
 	b.y = 0;
@@ -49,6 +50,6 @@ bool ofxButton::mouseDragged(ofMouseEventArgs & args){
 
 void ofxButton::valueChanged(bool & v){
 	if(!v){
-		ofNotifyEvent(triggerEvent);
+		ofNotifyEvent(triggerEvent, this);
 	}
 }

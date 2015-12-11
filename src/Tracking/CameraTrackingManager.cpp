@@ -94,6 +94,7 @@ void CameraTrackingManager::drawCamera()
     if(m_showCamera){
         m_cameraFbo.draw(m_cameraArea.x,m_cameraArea.y,m_cameraArea.width,m_cameraArea.height);
     }
+    ofPopStyle();
 }
 
 void CameraTrackingManager::drawHueColor()
@@ -102,7 +103,7 @@ void CameraTrackingManager::drawHueColor()
     ofEnableAlphaBlending();
     ofSetColor(m_hueColor);
     ofFill();
-    ofRect(0,0,m_cameraFbo.getWidth(), m_cameraFbo.getHeight());
+    ofDrawRectangle(0,0,m_cameraFbo.getWidth(), m_cameraFbo.getHeight());
     ofDisableAlphaBlending();
     ofPopStyle();
     

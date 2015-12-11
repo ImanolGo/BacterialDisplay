@@ -10,7 +10,6 @@
 
 #include "Manager.h"
 
-#include "ofxPS3EyeGrabber.h"
 
 
 //========================== class CameraTrackingManager ==============================

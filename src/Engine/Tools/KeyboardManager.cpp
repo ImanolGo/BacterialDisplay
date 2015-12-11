@@ -55,7 +55,7 @@ void KeyboardManager::keyPressed(ofKeyEventArgs &e)
 
     
     if(key >= 48 && key <= 57) {
-        AppManager::getInstance().getHaloManager()->setMode(key - 48);
+        AppManager::getInstance().getDisplayManager()->setMode(key - 48);
     }
 
 }

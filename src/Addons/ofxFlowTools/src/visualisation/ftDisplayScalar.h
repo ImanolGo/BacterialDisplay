@@ -9,12 +9,13 @@ namespace flowTools {
 	class ftDisplayScalar {
 	public:
 		
-		void	allocate(int _width, int _height){
+		void	setup(int _width, int _height){
 			width = _width;
 			height = _height;
 			visibleBuffer.allocate(width, height);
+			visibleBuffer.clear();
 			parameters.setName("display scalar");
-			parameters.add(scale.set("scale", .25, 0, 1));
+			parameters.add(scale.set("scale", .15, 0, 1));
 		};
 		
 //		void	update() {visibleFloatShader.update(visibleBuffer, *floatTexture, scale.get());};
@@ -26,9 +27,10 @@ namespace flowTools {
 		int		getWidth()	{ return width; }
 		int		getHeight()	{ return height; }
 		
-		ofTexture& getTextureReference() {return visibleBuffer.getTextureReference();};
+		ofTexture& getTextureReference() {return visibleBuffer.getTexture();};
 		void	draw(int _x, int _y) {draw(_x, _y, width, height);}
 		void	draw(int _x, int _y, int _width, int _height) {
+			visibleBuffer.clear();
 			visibleFloatShader.update(visibleBuffer, *floatTexture, scale.get());
 			visibleBuffer.draw(_x, _y, _width, _height);
 		};
@@ -38,7 +40,7 @@ namespace flowTools {
 		ofParameter<float>	scale;
 		int		width;
 		int		height;
-		ofFbo	visibleBuffer;
+		ftFbo	visibleBuffer;
 		ofTexture* floatTexture;
 		ftDisplayScalarShader visibleFloatShader;
 		

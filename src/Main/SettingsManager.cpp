@@ -49,7 +49,6 @@ void SettingsManager::loadAllSettings()
     this->loadTextureSettings();
     this->loadSvgSettings();
     this->loadColors();
-    this->loadHaloRingSettings();
 }
 
 bool SettingsManager::loadSettingsFile()
@@ -258,58 +257,6 @@ void SettingsManager::loadSvgSettings()
 
     ofLogNotice() <<"SettingsManager::loadSvgSettings->  path not found: " << svgPath ;
 }
-
-
-void SettingsManager::loadHaloRingSettings()
-{
-    m_xmlSettings.setTo("//");
-    
-    string ringSettingsPath = "//rings";
-    if(m_xmlSettings.exists(ringSettingsPath)) {
-        
-        typedef   std::map<string, string>   AttributesMap;
-        AttributesMap attributes;
-        int numLeds = 0;
-        
-        
-        ringSettingsPath = "//rings/settings[0]";
-        m_xmlSettings.setTo(ringSettingsPath);
-        attributes = m_xmlSettings.getAttributes();
-        numLeds = ofToInt(attributes["num_leds"]);
-        
-        m_xmlSettings.setTo("//");
-        ringSettingsPath = "//rings/ring[0]";
-        m_xmlSettings.setTo(ringSettingsPath);
-        do {
-            
-            attributes = m_xmlSettings.getAttributes();
-            
-            HaloRingSettings ringSettings;
-            
-            ringSettings.id = ofToString(attributes["id"]);
-            ringSettings.numberLeds = numLeds;
-            ringSettings.channel = ofToInt(attributes["channel"]);
-            ringSettings.fadeCandyInd = ofToInt(attributes["fadeCandy"]);
-            ringSettings.positionIndex = ofToInt(attributes["position"]);
-            
-            m_ringSettingsVector.push_back(ringSettings);
-            
-            ofLogNotice() <<"SettingsManager::loadHaloRingSettings->  id = " << ringSettings.id  <<", channel = " << ringSettings.channel
-            <<", fadeCandyInd = "<< ringSettings.fadeCandyInd << ", numberLeds = " <<  ringSettings.numberLeds <<
-            ", positionIndex = " <<  ringSettings.positionIndex ;
-        }
-        while(m_xmlSettings.setToSibling()); // go to the next node
-        
-        
-        ofLogNotice() <<"SettingsManager::loadHaloRingSettings->  successfully loaded the button settings" ;
-        return;
-    }
-    
-    ofLogNotice() <<"SettingsManager::loadHaloRingSettings->  path not found: " << ringSettingsPath ;
-}
-
-
-
 
 
 

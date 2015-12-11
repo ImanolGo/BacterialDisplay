@@ -10,7 +10,7 @@
 #pragma once
 
 #include "Manager.h"
-#include "HaloRing.h"
+#include "DisplayUnit.h"
 
 //========================== class SettingsManager ==============================
 //============================================================================
@@ -20,7 +20,7 @@
  */
 
 typedef             map<string,string>               ResourcesPathMap;       ///< defines a map of path attached to the resources name
-typedef             vector< HaloRingSettings >  RingSettingsVector;   ///< Defines a vector of Button settings
+typedef             vector< DisplayUnitSettings >  DisplaySettingsVector;   ///< Defines a vector of Button settings
 
 class SettingsManager: public Manager
 {
@@ -42,7 +42,6 @@ class SettingsManager: public Manager
 
         const ResourcesPathMap& getSvgResourcesPath() const {return m_svgResourcesPath;}
     
-        const RingSettingsVector& getRingsSettingsVector() const {return m_ringSettingsVector;}
 
         ofColor getColor(const string& colorName);
     
@@ -80,9 +79,6 @@ class SettingsManager: public Manager
 
         //! Loads all the svg images settings
         void loadSvgSettings();
-    
-        //! Loads all the halo ring settings
-        void loadHaloRingSettings();
 
 
     private:
@@ -99,7 +95,6 @@ class SettingsManager: public Manager
         int                     m_port;                 ///< stores the UDP port used for the Network communications
         string                  m_ipAddress;             ///< stores the Ip Address used for the Network communications
     
-        RingSettingsVector      m_ringSettingsVector;   ///< it stores the ring settings from all the buttons
 };
 
 

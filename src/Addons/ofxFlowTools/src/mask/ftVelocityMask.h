@@ -20,8 +20,8 @@ namespace flowTools {
 		void	update();
 		
 		ofTexture& getTextureReference() {return getColorMask();};
-		ofTexture& getColorMask() {return colorMaskSwapBuffer.src->getTextureReference();};
-		ofTexture& getLuminanceMask() {return luminanceMaskFbo.getTextureReference();};
+		ofTexture& getColorMask() {return colorMaskSwapBuffer.src->getTexture();};
+		ofTexture& getLuminanceMask() {return luminanceMaskFbo.getTexture();};
 		void	draw(int _x, int _y) {draw(_x, _y, width, height);}
 		void	draw(int _x, int _y, int _width, int _height) {colorMaskSwapBuffer.src->draw(_x, _y, _width, _height);};
 		
@@ -41,12 +41,14 @@ namespace flowTools {
 		ofParameter<int>	blurPasses;
 		ofParameter<float>	blurRadius;
 		
-		int		width;
-		int		height;
-		ofTexture* densityTexture;
-		ofTexture* velocityTexture;
-		ftSwapBuffer	colorMaskSwapBuffer;
-		ftFbo	luminanceMaskFbo;
+		int					width;
+		int					height;
+		ofTexture*			densityTexture;
+		bool				bDensityTextureSet;
+		ofTexture*			velocityTexture;
+		bool				bVelocityTextureSet;
+		ftSwapBuffer		colorMaskSwapBuffer;
+		ftFbo				luminanceMaskFbo;
 		ftVelocityMaskShader VelocityMaskShader;
 		
 		ftEOGShader			EOGShader;

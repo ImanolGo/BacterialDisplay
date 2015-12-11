@@ -29,6 +29,7 @@ namespace flowTools {
 		void    update(float _deltaTime = 0);
 		void    draw(int x = 0, int y = 0, float _width = -1, float _height = -1);
 		void	reset();
+		void	resetBackground();
 		
 		void    addDensity(ofTexture& _tex, float _strength  = 1.0);
 		void    addVelocity(ofTexture& _tex, float _strength  = 1.0);
@@ -37,15 +38,15 @@ namespace flowTools {
 		void    addObstacle(ofTexture& _tex);
 		void    addTempObstacle(ofTexture& _tex);
 		
-		ofTexture&	getDensity() {return densitySwapBuffer.src->getTextureReference();};
-		ofTexture&	getVelocity() {return velocitySwapBuffer.src->getTextureReference();};
-		ofTexture&	getPressure() {return pressureSwapBuffer.src->getTextureReference();}
-		ofTexture&	getTemperature() {return temperatureSwapBuffer.src->getTextureReference();}
-		ofTexture&	getDivergence() {return divergenceBuffer.getTextureReference();}
-		ofTexture&	getObstacle() {return combinedObstacleBuffer.getTextureReference();}
-		ofTexture&	getCurlMagnitude() {return vorticityFirstPassBuffer.getTextureReference();}
-		ofTexture&	getConfinement() {return vorticitySecondPassBuffer.getTextureReference();}
-		ofTexture&	getSmokeBuoyancy() {return smokeBuoyancyBuffer.getTextureReference();}
+		ofTexture&	getDensity() {return densitySwapBuffer.src->getTexture();};
+		ofTexture&	getVelocity() {return velocitySwapBuffer.src->getTexture();};
+		ofTexture&	getPressure() {return pressureSwapBuffer.src->getTexture();}
+		ofTexture&	getTemperature() {return temperatureSwapBuffer.src->getTexture();}
+		ofTexture&	getDivergence() {return divergenceBuffer.getTexture();}
+		ofTexture&	getObstacle() {return combinedObstacleBuffer.getTexture();}
+		ofTexture&	getCurlMagnitude() {return vorticityFirstPassBuffer.getTexture();}
+		ofTexture&	getConfinement() {return vorticitySecondPassBuffer.getTexture();}
+		ofTexture&	getSmokeBuoyancy() {return smokeBuoyancyBuffer.getTexture();}
 			
 		int		getSimulationWidth() {return simulationWidth;}
 		int		getSimulationHeight() {return simulationHeight;}

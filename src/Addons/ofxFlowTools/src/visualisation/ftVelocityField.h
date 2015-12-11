@@ -9,7 +9,7 @@ namespace flowTools {
 	class ftVelocityField {
 	public:
 		
-		void	allocate(int _width, int _height){
+		void	setup(int _width, int _height){
 			width = _width;
 			height = _height;
 			
@@ -23,10 +23,8 @@ namespace flowTools {
 			}
 			fieldVbo.setMesh(fieldMesh, GL_DYNAMIC_DRAW, false, false, false);
 			
-			
 			parameters.setName("velocity field");
-			parameters.add(vectorSize.set("vector Size", 1, 0, 2));
-			parameters.add(maxSize.set("maxSize", 1, 0, 1));
+			parameters.add(velocityScale.set("velocity scale", .1, 0, 2));
 			parameters.add(lineSmooth.set("line smooth", false));
 		};
 		
@@ -43,9 +41,8 @@ namespace flowTools {
 			}
 			
 			ofScale(_width, _height);
-//			fieldMesh.draw();
-//			fieldVbo.draw(GL_POINTS, 0, vectorSize.get());
-			velocityFieldShader.update(fieldVbo, *floatTexture, vectorSize.get(), maxSize.get());
+			float maxArrowLength =  2.0 / (width + 1);
+			velocityFieldShader.update(fieldVbo, *velocityTexture, velocityScale.get(), maxArrowLength);
 			
 			if (lineSmooth.get()) {
 				glDisable(GL_LINE_SMOOTH);
@@ -56,16 +53,14 @@ namespace flowTools {
 			ofPopMatrix();
 		}
 		
-		void	setSource(ofTexture& tex)	{ floatTexture = &tex; }
-		void	setVectorSize(float _value)	{ vectorSize.set(_value); }
-		void	setMaxSize(float _value)	{ maxSize.set(_value); }
-		void	setLineSmooth(bool _value)	{ lineSmooth.set(_value); }
+		void	setVelocity(ofTexture& tex)			{ velocityTexture = &tex; }
+		void	setVelocityScale(float _value)		{ velocityScale.set(_value); }
+		void	setLineSmooth(bool _value)			{ lineSmooth.set(_value); }
 		
-		float	getVectorSize()	{ return vectorSize.get(); }
-		float	getMaxSize()	{ return maxSize.get(); }
-		bool	getLineSmooth() { return lineSmooth.get(); }
-		int		getWidth()		{ return width; }
-		int		getHeight()		{ return height; }
+		float	getVelocityScale()					{ return velocityScale.get(); }
+		bool	getLineSmooth()						{ return lineSmooth.get(); }
+		int		getWidth()							{ return width; }
+		int		getHeight()							{ return height; }
 		
 		ofParameterGroup	parameters;
 		
@@ -73,12 +68,12 @@ namespace flowTools {
 		int		width;
 		int		height;
 		
-		ofParameter<float>	vectorSize;
-		ofParameter<float>	maxSize;
+		ofParameter<float>	velocityScale;		// scale to normalize velocity
 		ofParameter<bool>	lineSmooth;
+
 		
+		ofTexture*	velocityTexture;
 		ofMesh		fieldMesh;
-		ofTexture*	floatTexture;
 		ofVbo		fieldVbo;
 		
 		ftVelocityFieldShader velocityFieldShader;
