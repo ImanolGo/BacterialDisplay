@@ -13,8 +13,6 @@
 #include "GuiManager.h"
 
 const string GuiManager::GUI_CAMERA_SETTINGS_FILE_NAME = "xmls/CameraGuiSettings.xml";
-const string GuiManager::GUI_FLUID_SETTINGS_FILE_NAME = "xmls/FluidGuiSettings.xml";
-
 
 GuiManager::GuiManager(): Manager(), m_showGui(true)
 {
@@ -44,10 +42,8 @@ void GuiManager::setup()
 void GuiManager::setupCameraGui()
 {
     
-    ofRectangle fluidRectangle = m_fluidGui.getShape();
-    
     m_cameraGui.setup("CameraGUI", GUI_CAMERA_SETTINGS_FILE_NAME);
-    m_cameraGui.setPosition(fluidRectangle.getRight() + 20,fluidRectangle.y);
+    m_cameraGui.setPosition(20,20);
     
     ofPtr<CameraTrackingManager> cameraTrackingManager = AppManager::getInstance().getCameraTrackingManager();
    
@@ -83,7 +79,6 @@ void GuiManager::draw()
     
     m_cameraGui.draw();
     guiFPS = ofGetFrameRate();
-    m_fluidGui.draw();
     
 }
 
@@ -91,12 +86,10 @@ void GuiManager::draw()
 void GuiManager::saveGuiValues()
 {
     m_cameraGui.saveToFile(GUI_CAMERA_SETTINGS_FILE_NAME);
-    m_fluidGui.saveToFile(GUI_FLUID_SETTINGS_FILE_NAME);
 }
 
 void GuiManager::loadGuiValues()
 {
-     m_fluidGui.loadFromFile(GUI_FLUID_SETTINGS_FILE_NAME);
      m_cameraGui.loadFromFile(GUI_CAMERA_SETTINGS_FILE_NAME);
 }
 

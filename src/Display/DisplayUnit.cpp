@@ -56,8 +56,15 @@ void DisplayUnitPreview::drawUnit()
     
     ofNoFill();
     ofSetLineWidth(2);
-    ofSetColor(0);
-    //ofEllipse(m_position.x , m_position.y, m_width, m_height);
+    
+    if(m_settings.channel%2==0)
+    { ofSetColor(0);
+    }
+    else{
+        ofSetColor(200);
+    }
+    
+    ofDrawEllipse(m_position.x , m_position.y, m_width, m_height);
     //ofEllipse(m_position.x , m_position.y, m_width-margin*2, m_height-margin*2);
     
     float angleStep = (2.0 * M_PI)/m_settings.numberLeds;

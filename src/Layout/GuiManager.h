@@ -73,8 +73,6 @@ private:
     ofParameter<float>	offsetY;
     ofParameter<float>	scaleX;
     ofParameter<float>	scaleY;
-    
-    ofxPanel    m_fluidGui;      //Class creating a fluid gui panel
 
     // Camera GUI
     ofxPanel    m_cameraGui;      //Class creating a camera gui panel

@@ -49,10 +49,10 @@ void CameraTrackingManager::setupCamera()
     m_videoGrabber.setDesiredFrameRate(60);
     m_videoGrabber.initGrabber(CAMERA_WIDTH,CAMERA_HEIGHT);
     
-    m_cameraArea.width = ofGetWidth()*0.5 - 40;
+    m_cameraArea.width = ofGetWidth()*0.5 - 140;
     m_cameraArea.height = m_cameraArea.width*CAMERA_HEIGHT/CAMERA_WIDTH;
     m_cameraArea.x = ofGetWidth()*0.75 -  m_cameraArea.width*0.5;
-    m_cameraArea.y = ofGetWidth()*0.25 -  m_cameraArea.height*0.5;
+    m_cameraArea.y = ofGetHeight()*0.25 -  m_cameraArea.height*0.5;
     
 }
 

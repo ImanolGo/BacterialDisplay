@@ -98,46 +98,52 @@ void DisplayManager::createDisplayUnitSettings()
     ofLogNotice() <<"DisplayManager::createDisplayUnitsPositions->  m_imageSpaceRectangle:  x = " << m_imageSpaceRectangle.x << ", y = " << m_imageSpaceRectangle.y << ", w = " << m_imageSpaceRectangle.height << ", h = " << m_imageSpaceRectangle.width;
     
     
-    int colInd = 0;
-    int rowInd = 0;
+
+    
     int maxUnitsInCol = 10;
     int minUnitsInCol = maxUnitsInCol-1;
+    int rowMax = maxUnitsInCol;
+    int rowInd = rowMax - 1;
+    int colInd = 0;
+ 
     
-    int rowMax = maxUnitsInRow;
+    
     int totalUnits = maxUnitsInRow*maxUnitsInCol + minUnitsInRow*minUnitsInCol;
-    float topMargin = m_displayUnitPreviewSize + margin;
+    float topMargin = 0;
     
-    int pixelsPerChannel = 39;
+    int pixelsPerChannel = 38;
     int channel = 1;
     int index = 0;
     
     ofLogNotice() <<"DisplayManager::createDisplayUnitsPositions->  total units= " << totalUnits;
     for (int i = 0; i < totalUnits; i++) {
         
-        channel = i/pixelsPerChannel + 1;
-        index = i % pixelsPerChannel;
-        
-        DisplayUnitSettings settings; settings.id = ofToString(i+1); settings.channel; settings.index = index; settings.numberLeds = 2;
-        m_displayUnitsSettings[i] = settings;
-     
-        if(colInd>=rowMax){
+        if(rowInd>=rowMax || rowInd<0){
             
             colInd++;
             
             if((colInd%2==0)){
-                rowMax = maxUnitsInRow;
+                rowMax = maxUnitsInCol;
                 rowInd = rowMax - 1;
                 topMargin = 0;
             }
             else{
-                rowMax = minUnitsInRow;
+                rowMax = minUnitsInCol;
                 rowInd=0;
                 topMargin = m_displayUnitPreviewSize;
             }
         }
         
-        float x = m_previewRectangle.x + m_displayUnitPreviewSize*0.5 + (2*m_displayUnitPreviewSize + 2*margin)*colInd;
-        float y = m_previewRectangle.y + topMargin + m_displayUnitPreviewSize*0.5 + (m_displayUnitPreviewSize*0.5 + margin*0.5)*rowInd;
+        channel = i/pixelsPerChannel + 1;
+        index = i % pixelsPerChannel;
+        
+        DisplayUnitSettings settings; settings.id = ofToString(i+1); settings.channel = channel; settings.index = index; settings.numberLeds = 2;
+        m_displayUnitsSettings[i] = settings;
+
+        ofLogNotice() <<"DisplayManager::createDisplayUnitsPreviewPositions->  channel = " << channel << ", index = " << index ;
+        
+        float x = m_previewRectangle.x + m_displayUnitPreviewSize*0.5 + (m_displayUnitPreviewSize + margin)*colInd*0.5;
+        float y = m_previewRectangle.y + topMargin + m_displayUnitPreviewSize*0.5 + (2*m_displayUnitPreviewSize)*rowInd;
         
         m_displayUnitsPreviewPositionMap[i] = ofVec3f(x,y,0);
         
@@ -183,9 +189,9 @@ ofPtr<DisplayUnit> DisplayManager::createSingleDisplayUnit(int id)
         settings = m_displayUnitsSettings[id];
     }
     
-    //ofLogNotice() <<"DisplayManager::createDisplayUnits->  id = " << settings.id  <<", channel = " << settings.channel
-    //<<", fadeCandyInd = "<< settings.fadeCandyInd << ", numberLeds = " <<  settings.numberLeds <<
-    // ", x = " <<  ringPosition.x <<  ", y = " <<  ringPosition.y ;
+    ofLogNotice() <<"DisplayManager::createDisplayUnits->  id = " << settings.id  <<", channel = " << settings.channel
+    <<", index = "<< settings.index << ", numberLeds = " <<  settings.numberLeds <<
+     ", x = " <<  displayUnitPosition.x <<  ", y = " <<  displayUnitPosition.y ;
     
     BasicVisual basicVisual = BasicVisual(displayUnitPosition, m_displayUnitSize, m_displayUnitSize);
     ofPtr<DisplayUnit> displayUnit = ofPtr<DisplayUnit>(new DisplayUnit(basicVisual,settings));
