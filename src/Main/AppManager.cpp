@@ -121,10 +121,10 @@ void AppManager::setDebugMode(bool showDebug)
     ofLogNotice()<<"AppManager::setDebugMode-> " << m_debugMode;
     
     if(m_debugMode){
-        ofSetLogLevel(OF_LOG_VERBOSE);
+        //ofSetLogLevel(OF_LOG_VERBOSE);
     }
     else{
-        ofSetLogLevel(OF_LOG_NOTICE);
+        //ofSetLogLevel(OF_LOG_NOTICE);
     }
     
     m_displayManager->showDisplayPreview(m_debugMode);

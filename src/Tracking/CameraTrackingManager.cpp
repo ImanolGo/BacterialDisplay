@@ -49,7 +49,7 @@ void CameraTrackingManager::setupCamera()
     m_videoGrabber.setDesiredFrameRate(60);
     m_videoGrabber.initGrabber(CAMERA_WIDTH,CAMERA_HEIGHT);
     
-    m_cameraArea.width = ofGetWidth()*0.5 - 140;
+    m_cameraArea.width = ofGetWidth()*0.25;
     m_cameraArea.height = m_cameraArea.width*CAMERA_HEIGHT/CAMERA_WIDTH;
     m_cameraArea.x = ofGetWidth()*0.75 -  m_cameraArea.width*0.5;
     m_cameraArea.y = ofGetHeight()*0.25 -  m_cameraArea.height*0.5;
@@ -77,22 +77,28 @@ void CameraTrackingManager::updateHue()
 void CameraTrackingManager::draw()
 {
     this->drawCamera();
+    //ofSetColor(ofColor::white);
+    //m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
+    //m_videoGrabber.draw(0, 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight());
 }
 
 void CameraTrackingManager::drawCamera()
 {
     // Blink the led everytime there is a new frame
     ofPushStyle();
-    ofEnableBlendMode(OF_BLENDMODE_DISABLED);
+    //ofEnableBlendMode(OF_BLENDMODE_DISABLED);
     m_cameraFbo.begin();
     
+    ofSetColor(ofColor::white);
     m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
-    this->drawHueColor();
+    //this->drawHueColor();
     
     m_cameraFbo.end();
     
+    //m_cameraFbo.draw(m_cameraArea.x,m_cameraArea.y,m_cameraArea.width,m_cameraArea.height);
     if(m_showCamera){
         m_cameraFbo.draw(m_cameraArea.x,m_cameraArea.y,m_cameraArea.width,m_cameraArea.height);
+        //m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     }
     ofPopStyle();
 }

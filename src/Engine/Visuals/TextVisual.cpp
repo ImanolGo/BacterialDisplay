@@ -96,6 +96,7 @@ void  TextVisual::setLineHeight(float lineHeight)
 void TextVisual::draw()
 {
     ofPushMatrix();
+    ofPushStyle();
     //ofEnableAlphaBlending();
 
         ofScale(m_scale.x, m_scale.y);
@@ -115,5 +116,7 @@ void TextVisual::draw()
         m_font.drawMultiLineColumn(m_text,m_position.x,m_position.y,m_width);
 
     //ofDisableAlphaBlending();
+    
+    ofPopStyle();
     ofPopMatrix();   // recall the pushed style
 }

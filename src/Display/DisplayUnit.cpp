@@ -26,6 +26,7 @@ DisplayUnitPreview::~DisplayUnitPreview()
 void DisplayUnitPreview::setup()
 {
     this->setupTextVisual();
+    this->setupImageVisuals();
 }
 
 void DisplayUnitPreview::setupTextVisual()
@@ -37,6 +38,23 @@ void DisplayUnitPreview::setupTextVisual()
     m_textVisual->setText(m_settings.id,fontPath,fontSize,ofColor::black);
 }
 
+
+void DisplayUnitPreview::setupImageVisuals()
+{
+    m_ringVisual.setResource("Ring");
+    m_ringVisual.setWidth(m_width);
+    m_ringVisual.setHeight(m_height);
+    m_ringVisual.setCentred(true);
+    m_ringVisual.setPosition(m_position);
+    
+    
+    float pixelSize = 10;
+    m_ledVisual.setResource("Pixel");
+    m_ledVisual.setWidth(pixelSize);
+    m_ledVisual.setHeight(pixelSize);
+    m_ledVisual.setCentred(true);
+}
+
 void DisplayUnitPreview::draw()
 {
     this->drawUnit();
@@ -45,26 +63,29 @@ void DisplayUnitPreview::draw()
 
 void DisplayUnitPreview::drawUnit()
 {
+
     
     ofSetCircleResolution(10);
     
-    float pixelSize = 4;
-    float margin = pixelSize*2;
+    float pixelRadius = m_ledVisual.getWidth()*0.5;
+    float margin = pixelRadius*2;
+    
     
     ofPushMatrix();
     ofPushStyle();
-    
-    ofNoFill();
-    ofSetLineWidth(2);
+    ofEnableAlphaBlending();
+
     
     if(m_settings.channel%2==0)
-    { ofSetColor(0);
+    {
+        m_ringVisual.setColor(ofColor::black);
     }
     else{
-        ofSetColor(200);
+        m_ringVisual.setColor(ofColor::white);
     }
     
-    ofDrawEllipse(m_position.x , m_position.y, m_width, m_height);
+    m_ringVisual.draw();
+    //ofDrawEllipse(m_position.x , m_position.y, m_width, m_height);
     //ofEllipse(m_position.x , m_position.y, m_width-margin*2, m_height-margin*2);
     
     float angleStep = (2.0 * M_PI)/m_settings.numberLeds;
@@ -78,10 +99,16 @@ void DisplayUnitPreview::drawUnit()
         float rx = m_position.x  + 0.5 * (m_width - margin) * cos(angle);
         float ry = m_position.y + 0.5 * (m_height - margin) * sin(angle);
         
-        ofSetColor(m_ledColor[i]);
-        ofDrawCircle(rx,ry,pixelSize);
+        ofColor color(m_ledColor[i]);
+        m_ledVisual.setColor(color);
+        m_ledVisual.setPosition(ofPoint(rx,ry));
+        m_ledVisual.draw();
+        
+        //ofSetColor(m_ledColor[i]);
+        //ofDrawCircle(rx,ry,pixelRadius);
     }
     
+    ofDisableAlphaBlending();
     ofPopStyle();
     ofPopMatrix();
 }
@@ -93,8 +120,10 @@ void DisplayUnitPreview::drawID(bool hideText)
         return;
     }
     
+    ofEnableAlphaBlending();
     ofSetColor(255);
     m_textVisual->draw();
+    ofDisableAlphaBlending();
 }
 
 
@@ -158,6 +187,7 @@ void DisplayUnit::setupTextVisual()
     m_textVisual->setText(stringId,fontPath,fontSize,ofColor::white);
 }
 
+
 //--------------------------------------------------------------
 
 void DisplayUnit::setPixels(const ofRectangle& grabArea, const ofPixels& screenPixels)
@@ -167,6 +197,7 @@ void DisplayUnit::setPixels(const ofRectangle& grabArea, const ofPixels& screenP
         float x = m_ledPositions[i].x  - grabArea.x;
         float y = m_ledPositions[i].y  - grabArea.y;
         m_ledColor[i] = screenPixels.getColor(x, y).getBrightness();
+        //m_ledColor = screenPixels.getColor(x, y);
     }
     
     m_displayUnitPreview->setColor(m_ledColor);
@@ -189,7 +220,11 @@ void DisplayUnit::drawGrabRegion(bool hideArea)
     }
     
     ofDrawEllipse(m_position.x, m_position.y, m_width, m_height);
-    ofDrawEllipse(m_position.x, m_position.y, m_width-m_margin*2, m_height-m_margin*2);
+    //ofDrawEllipse(m_position.x, m_position.y, m_width-m_margin*2, m_height-m_margin*2);
+    
+    float angleStep = (2.0 * M_PI)/m_settings.numberLeds;
+    float offsetAngle = 0;
+    
     
     ofSetLineWidth(1);
     for (int i = 0; i < m_ledPositions.size(); i++)
@@ -207,13 +242,17 @@ void DisplayUnit::drawID(bool hideText)
         return;
     }
     
+    ofPushStyle();
+    ofEnableAlphaBlending();
     ofSetColor(0, 175);
     m_textVisual->draw();
+    ofDisableAlphaBlending();
+    ofPopStyle();
 }
 
 void DisplayUnit::draw()
 {
     m_displayUnitPreview->draw();
-    //this->drawGrabRegion();
-    this->drawID();
+    this->drawGrabRegion();
+    //this->drawID();
 }

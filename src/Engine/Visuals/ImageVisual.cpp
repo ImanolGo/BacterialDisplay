@@ -11,6 +11,13 @@
 
 #include "ImageVisual.h"
 
+
+ImageVisual::ImageVisual(): BasicVisual(), m_centred(false), m_resizer(1,1,1)
+{
+    //this->setResource("");
+}
+
+
 ImageVisual::ImageVisual(const ofVec3f& pos, const string& resourceName,bool centred):
     BasicVisual(pos, 0, 0), m_centred(centred), m_resizer(1,1,1)
 {
@@ -42,6 +49,7 @@ void ImageVisual::draw()
 
 
     ofPushMatrix();
+    ofPushStyle();
 
         ofTranslate(m_position);
 
@@ -59,6 +67,7 @@ void ImageVisual::draw()
         ofSetColor(m_color);
         m_texture->draw(0,0);
 
+    ofPopStyle();
     ofPopMatrix();
 }
 
@@ -84,4 +93,9 @@ void ImageVisual::setHeight(float height, bool keepRatio)
 
     m_resizer.x = m_width/m_originalWidth;
     m_resizer.y = m_height/m_originalHeight;
+}
+
+ofTexture & ImageVisual::getTexture()
+{
+    return (*m_texture.get());
 }

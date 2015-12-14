@@ -37,6 +37,7 @@ bool SvgVisual::setResource(const string& resourceName)
 void SvgVisual::draw()
 {
     ofPushMatrix();
+    ofPushStyle();
 
         ofTranslate(m_position);
 
@@ -58,7 +59,8 @@ void SvgVisual::draw()
 
         m_svg->draw();
 
-
+    
+    ofPopStyle();
     ofPopMatrix();
 }
 

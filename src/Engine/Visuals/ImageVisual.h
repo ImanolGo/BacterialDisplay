@@ -23,6 +23,9 @@ class ImageVisual: public BasicVisual
 public:
 
     //! Constructor
+    ImageVisual();
+    
+    //! Constructor
     ImageVisual(const ofVec3f& pos, const string& resourceName, bool centred = false);
 
     //! Destructor
@@ -33,6 +36,9 @@ public:
 
     //! Sets the texture to be binded to the quad
     virtual bool setResource(const string& resourceName);
+    
+    //! Sets the texture to be binded to the quad
+    virtual void setCentred(bool centred) {m_centred = centred;}
 
     //! Set the width
     virtual void setWidth(float width, bool keepRatio=false);
@@ -45,6 +51,8 @@ public:
 
     //! Get the original height
     float getOriginalHeight() const {return m_originalHeight;}
+    
+    ofTexture & getTexture();
 
 
 protected:

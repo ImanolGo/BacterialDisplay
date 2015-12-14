@@ -52,6 +52,9 @@ public:
 
     //! Creates a certain fading visual effect
 	void createFadeEffect(ofPtr<BasicVisual> visual, double startAlpha,double endAlpha, double startAnimation, double animationTime);
+    
+    //! Creates a certain fading visual effect
+    void createFadeEffect(ofPtr<BasicVisual> visual, double endAlpha, double startAnimation, double animationTime);
 
 	//! Creates a certain scaling visual effect
 	void createScaleEffect(ofPtr<BasicVisual> visual, const ofVec2f& startScale,const ofVec2f& endScale, double startAnimation, double animationTime);
@@ -73,8 +76,6 @@ public:
 
 	//! Creates a certain color visual effect
 	void popUpAnimation(ofPtr<BasicVisual> visual, double startAnimation, double animationTime);
-
-private:
 
     //! Adds a certain visual effect
 	void addVisualEffect(ofPtr<VisualEffect> visualEffect);

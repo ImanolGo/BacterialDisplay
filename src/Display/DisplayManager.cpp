@@ -14,9 +14,6 @@
 #include "SettingsManager.h"
 
 
-const int DisplayManager::NUM_FADE_CANDYS = 11;
-const int DisplayManager::NUM_HALO_RINGS = 85;
-const int DisplayManager::NUM_HALO_LEDS = 48;
 
 DisplayManager::DisplayManager(): Manager(), m_displayUnitSize(0.0), m_showDisplayPreview(true)
 {
@@ -62,7 +59,7 @@ void DisplayManager::createDisplayUnitSettings()
     int minUnitsInRow = maxUnitsInRow-1;
     int maxNumRows = 19;
     
-    float marginRatio = 0.3;
+    float marginRatio = 0.2;
     
     float layoutMargin = 20;
     float wallWidth = ofGetWidth()*0.5 - layoutMargin*2;
@@ -115,7 +112,7 @@ void DisplayManager::createDisplayUnitSettings()
     int channel = 1;
     int index = 0;
     
-    ofLogNotice() <<"DisplayManager::createDisplayUnitsPositions->  total units= " << totalUnits;
+    //ofLogNotice() <<"DisplayManager::createDisplayUnitsPositions->  total units= " << totalUnits;
     for (int i = 0; i < totalUnits; i++) {
         
         if(rowInd>=rowMax || rowInd<0){
@@ -140,7 +137,7 @@ void DisplayManager::createDisplayUnitSettings()
         DisplayUnitSettings settings; settings.id = ofToString(i+1); settings.channel = channel; settings.index = index; settings.numberLeds = 2;
         m_displayUnitsSettings[i] = settings;
 
-        ofLogNotice() <<"DisplayManager::createDisplayUnitsPreviewPositions->  channel = " << channel << ", index = " << index ;
+        //ofLogNotice() <<"DisplayManager::createDisplayUnitsPreviewPositions->  channel = " << channel << ", index = " << index ;
         
         float x = m_previewRectangle.x + m_displayUnitPreviewSize*0.5 + (m_displayUnitPreviewSize + margin)*colInd*0.5;
         float y = m_previewRectangle.y + topMargin + m_displayUnitPreviewSize*0.5 + (2*m_displayUnitPreviewSize)*rowInd;
@@ -189,9 +186,9 @@ ofPtr<DisplayUnit> DisplayManager::createSingleDisplayUnit(int id)
         settings = m_displayUnitsSettings[id];
     }
     
-    ofLogNotice() <<"DisplayManager::createDisplayUnits->  id = " << settings.id  <<", channel = " << settings.channel
-    <<", index = "<< settings.index << ", numberLeds = " <<  settings.numberLeds <<
-     ", x = " <<  displayUnitPosition.x <<  ", y = " <<  displayUnitPosition.y ;
+   // ofLogNotice() <<"DisplayManager::createDisplayUnits->  id = " << settings.id  <<", channel = " << settings.channel
+   // <<", index = "<< settings.index << ", numberLeds = " <<  settings.numberLeds <<
+     //", x = " <<  displayUnitPosition.x <<  ", y = " <<  displayUnitPosition.y ;
     
     BasicVisual basicVisual = BasicVisual(displayUnitPosition, m_displayUnitSize, m_displayUnitSize);
     ofPtr<DisplayUnit> displayUnit = ofPtr<DisplayUnit>(new DisplayUnit(basicVisual,settings));
@@ -221,7 +218,7 @@ void DisplayManager::setupOPC()
     int port = AppManager::getInstance().getSettingsManager()->getPort();
     
     // Connect to the fcserver
-    m_opcClient.setup(ipAddress, port, NUM_FADE_CANDYS);
+    m_opcClient.setup(ipAddress, port, 1);
     
     ofLogNotice() <<"DisplayManager::setupOPC -> Connect OPC Client to IP Address: " << ipAddress << ", port: " << port;
     
@@ -240,7 +237,9 @@ void DisplayManager::grabImageData()
     m_screenPixels.clear();
     m_screenImage.clear();
     m_screenImage.grabScreen(m_imageSpaceRectangle.x,m_imageSpaceRectangle.y,m_imageSpaceRectangle.width,m_imageSpaceRectangle.height);
-    m_screenPixels = m_screenImage.getPixels(); // Transfer grab data to the pixel array
+    AppManager::getInstance().getCameraTrackingManager()->getCameraFbo().readToPixels(m_screenPixels);
+    //m_screenPixels = m_screenImage.getPixels(); // Transfer grab data to the pixel array
+    //m_screenImage.draw(0,0, 1200, 400);
 }
 
 void DisplayManager::updateFadeCandys()

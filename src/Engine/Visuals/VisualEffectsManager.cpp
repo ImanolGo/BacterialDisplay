@@ -35,6 +35,7 @@ void VisualEffectsManager::update()
     {
         (*it)->update();
         
+        
         if((*it)->isFinished()) {
             it = m_visualEffects.erase(it);
         }
@@ -108,12 +109,23 @@ void VisualEffectsManager::createFadeEffect(ofPtr<BasicVisual> visual, double st
 	this->addVisualEffect(fadeVisual);
 }
 
+void VisualEffectsManager::createFadeEffect(ofPtr<BasicVisual> visual, double endAlpha, double startAnimation, double animationTime)
+{
+    if(!visual)
+        return;
+    
+    ofPtr<FadeVisual> fadeVisual = ofPtr<FadeVisual>(new FadeVisual(visual,CUBIC,EASE_OUT));
+    fadeVisual->setParameters(endAlpha,animationTime);
+    fadeVisual->start(startAnimation);
+    this->addVisualEffect(fadeVisual);
+}
+
 void VisualEffectsManager::createScaleEffect(ofPtr<BasicVisual> visual, const ofVec2f& startScale,const ofVec2f& endScale, double startAnimation, double animationTime)
 {
     if(!visual)
         return;
 
-	ofPtr<ScaleVisual> scaleVisual = ofPtr<ScaleVisual>(new ScaleVisual(visual,QUINTIC, EASE_OUT));
+	ofPtr<ScaleVisual> scaleVisual = ofPtr<ScaleVisual>(new ScaleVisual(visual,CUBIC, EASE_OUT));
 	scaleVisual->setParameters(startScale,endScale,animationTime);
 	scaleVisual->start(startAnimation);
 	this->addVisualEffect(scaleVisual);

@@ -25,9 +25,6 @@
 
 class DisplayManager: public Manager
 {
-    static const int NUM_FADE_CANDYS;
-    static const int NUM_HALO_RINGS;
-    static const int NUM_HALO_LEDS;
     
     public:
 

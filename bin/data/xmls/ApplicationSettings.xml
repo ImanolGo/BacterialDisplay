@@ -6,121 +6,21 @@
 	<debug showCursor="1" setVerbose="0"/>
 	<network ipAddress="127.0.0.1" port="7890"/>
   </of_settings>
-  
+
   <textures>
 
   	<texture name="Dot" path="images/general/dot.png"/>
-	
+    <texture name="Circle" path="images/general/Circle.png"/>
+    <texture name="Ring" path="images/general/Ring2.png"/>
+    <texture name="Pixel" path="images/general/Pixel.png"/>
+
   </textures>
 
   <colors>
 
 	<color name="CenterBackgroundColor" r="85" g="78" b="68" a="255"/>
 	<color name="EdgeBackgroundColor" r="30" g="30" b="30" a="255"/>
-	
+
   </colors>
 
-  <rings>
-  
-  	<settings num_leds="48"/>
-
-	<ring id="A1" channel="1" fadeCandy="1" position="5"/>
-	<ring id="A2" channel="2" fadeCandy="1" position="1"/>
-	<ring id="Aa" channel="3" fadeCandy="1" position="7"/>	
-	<ring id="A4" channel="4" fadeCandy="1" position="2"/>
-	<ring id="A5" channel="5" fadeCandy="1" position="14"/>
-	<ring id="A6" channel="6" fadeCandy="1" position="10"/>
-	<ring id="A7" channel="7" fadeCandy="1" position="6"/>
-	<ring id="A8" channel="8" fadeCandy="1" position="11"/>
-
-	<ring id="B1" channel="1" fadeCandy="2" position="23"/>
-	<ring id="B2" channel="2" fadeCandy="2" position="19"/>
-	<ring id="B3" channel="3" fadeCandy="2" position="15"/>	
-	<ring id="B4" channel="4" fadeCandy="2" position="20"/>
-	<ring id="B5" channel="5" fadeCandy="2" position="32"/>
-	<ring id="B6" channel="6" fadeCandy="2" position="28"/>
-	<ring id="B7" channel="7" fadeCandy="2" position="24"/>
-	<ring id="B8" channel="8" fadeCandy="2" position="29"/>
-
-	<ring id="C1" channel="1" fadeCandy="3" position="41"/>
-	<ring id="C2" channel="2" fadeCandy="3" position="37"/>
-	<ring id="C3" channel="3" fadeCandy="3" position="33"/>	
-	<ring id="C4" channel="4" fadeCandy="3" position="38"/>
-	<ring id="C5" channel="5" fadeCandy="3" position="50"/>
-	<ring id="C6" channel="6" fadeCandy="3" position="46"/>
-	<ring id="C7" channel="7" fadeCandy="3" position="42"/>
-	<ring id="C8" channel="8" fadeCandy="3" position="47"/>
-
-	<ring id="D1" channel="1" fadeCandy="4" position="59"/>
-	<ring id="D2" channel="2" fadeCandy="4" position="55"/>
-	<ring id="D3" channel="3" fadeCandy="4" position="51"/>	
-	<ring id="D4" channel="4" fadeCandy="4" position="56"/>
-	<ring id="D5" channel="5" fadeCandy="4" position="68"/>
-	<ring id="D6" channel="6" fadeCandy="4" position="64"/>
-	<ring id="D7" channel="7" fadeCandy="4" position="60"/>
-	<ring id="D8" channel="8" fadeCandy="4" position="65"/>
-
-	<ring id="E1" channel="1" fadeCandy="5" position="77"/>
-	<ring id="E2" channel="2" fadeCandy="5" position="73"/>
-	<ring id="E3" channel="3" fadeCandy="5" position="69"/>	
-	<ring id="E4" channel="4" fadeCandy="5" position="74"/>
-	<ring id="Ea" channel="5" fadeCandy="5" position="79"/>
-	<ring id="E6" channel="6" fadeCandy="5" position="82"/>
-	<ring id="E7" channel="7" fadeCandy="5" position="78"/>
-	<ring id="E8" channel="8" fadeCandy="5" position="83"/>
-
-	<ring id="F1" channel="1" fadeCandy="6" position="9"/>
-	<ring id="F2" channel="2" fadeCandy="6" position="4"/>
-	<ring id="F4" channel="4" fadeCandy="6" position="3"/>
-	<ring id="F5" channel="5" fadeCandy="6" position="18"/>
-	<ring id="F6" channel="6" fadeCandy="6" position="13"/>
-	<ring id="F7" channel="7" fadeCandy="6" position="8"/>
-	<ring id="F8" channel="8" fadeCandy="6" position="12"/>
-
-	<ring id="G1" channel="1" fadeCandy="7" position="27"/>
-	<ring id="G2" channel="2" fadeCandy="7" position="22"/>
-	<ring id="G3" channel="3" fadeCandy="7" position="17"/>	
-	<ring id="G4" channel="4" fadeCandy="7" position="21"/>
-	<ring id="G5" channel="5" fadeCandy="7" position="36"/>
-	<ring id="G6" channel="6" fadeCandy="7" position="31"/>
-	<ring id="G7" channel="7" fadeCandy="7" position="26"/>
-	<ring id="G8" channel="8" fadeCandy="7" position="30"/>
-
-	<ring id="H1" channel="1" fadeCandy="8" position="45"/>
-	<ring id="H2" channel="2" fadeCandy="8" position="40"/>
-	<ring id="H3" channel="3" fadeCandy="8" position="35"/>	
-	<ring id="H4" channel="4" fadeCandy="8" position="39"/>
-	<ring id="H5" channel="5" fadeCandy="8" position="54"/>
-	<ring id="H6" channel="6" fadeCandy="8" position="49"/>
-	<ring id="H7" channel="7" fadeCandy="8" position="44"/>
-	<ring id="H8" channel="8" fadeCandy="8" position="48"/>
-
-	<ring id="I1" channel="1" fadeCandy="9" position="63"/>
-	<ring id="I2" channel="2" fadeCandy="9" position="58"/>
-	<ring id="I3" channel="3" fadeCandy="9" position="53"/>	
-	<ring id="I4" channel="4" fadeCandy="9" position="57"/>
-	<ring id="I5" channel="5" fadeCandy="9" position="72"/>
-	<ring id="I6" channel="6" fadeCandy="9" position="67"/>
-	<ring id="I7" channel="7" fadeCandy="9" position="62"/>
-	<ring id="I8" channel="8" fadeCandy="9" position="66"/>
-
-	<ring id="J1" channel="1" fadeCandy="10" position="81"/>
-	<ring id="J2" channel="2" fadeCandy="10" position="76"/>
-	<ring id="J3" channel="3" fadeCandy="10" position="71"/>	
-	<ring id="J4" channel="4" fadeCandy="10" position="75"/>
-	<ring id="J6" channel="6" fadeCandy="10" position="85"/>
-	<ring id="J7" channel="7" fadeCandy="10" position="80"/>
-	<ring id="J8" channel="8" fadeCandy="10" position="84"/>
-
-	<ring id="S1" channel="1" fadeCandy="11" position="70"/>
-	<ring id="S2" channel="2" fadeCandy="11" position="61"/>
-	<ring id="S3" channel="3" fadeCandy="11" position="52"/>
-	<ring id="S4" channel="4" fadeCandy="11" position="43"/>	
-	<ring id="S5" channel="5" fadeCandy="11" position="34"/>
-	<ring id="S6" channel="6" fadeCandy="11" position="25"/>	
-	<ring id="S7" channel="7" fadeCandy="11" position="16"/>
-		
-  </rings>
-
-  
 </settings>

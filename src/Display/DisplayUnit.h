@@ -12,6 +12,7 @@
 #include "ofMain.h"
 #include "BasicVisual.h"
 #include "TextVisual.h"
+#include "ImageVisual.h"
 
 class DisplayUnitSettings {
     
@@ -51,6 +52,8 @@ private:
     
     void setupTextVisual();
     
+    void setupImageVisuals();
+    
     void drawUnit();
     
     void drawID(bool hideText = false);
@@ -64,6 +67,9 @@ private:
     DisplayUnitSettings m_settings;
     
     ofPtr<TextVisual>  m_textVisual;
+    ImageVisual        m_ringVisual;
+    ImageVisual        m_ledVisual;
+
     
 };
 

@@ -22,7 +22,8 @@ ImageVisual3D::~ImageVisual3D()
 void ImageVisual3D::draw()
 {
     ofPushMatrix();
-
+    ofPushStyle();
+    
         ofTranslate(m_position);
         ofRotateX(m_rotation.x);
         ofRotateY(m_rotation.y);
@@ -37,5 +38,6 @@ void ImageVisual3D::draw()
             m_plane->draw();
         m_texture->unbind();
 
+    ofPopStyle();
     ofPopMatrix();
 }

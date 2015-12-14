@@ -7,7 +7,7 @@
 
 #include <math.h>
 
-#include "../Main/AppManager.h"
+#include "AppManager.h"
 #include "VisualEffectsManager.h"
 #include "VisualEffects.h"
 #include "BasicVisual.h"
@@ -17,7 +17,7 @@
 //==============================================================================
 
 
-VisualEffect::VisualEffect(ofPtr<BasicVisual> visual, EasingFunction function, EasingType type): m_visual(visual), m_function(function), m_isActive(false), m_animationTime(1000.0), m_elapsedTime(0.0),	m_elaspedTimeToStart(0.0), m_type(type), m_isFinished(false)
+VisualEffect::VisualEffect(ofPtr<BasicVisual> visual, EasingFunction function, EasingType type): m_visual(visual), m_function(function), m_isActive(false), m_animationTime(1000.0), m_elapsedTime(0.0),	m_elaspedTimeToStart(0.0), m_type(type), m_isFinished(true)
 {
 	// intentionally left empty
 }
@@ -317,6 +317,7 @@ void ScaleVisual::update()
 
     m_scale.x = this->function(m_elapsedTime,m_startScale.x,m_endScale.x,m_animationTime);
 	m_scale.y = this->function(m_elapsedTime,m_startScale.y,m_endScale.y,m_animationTime);
+    m_scale.z = this->function(m_elapsedTime,m_startScale.z,m_endScale.z,m_animationTime);
 	m_visual->setScale(m_scale);
 }
 
