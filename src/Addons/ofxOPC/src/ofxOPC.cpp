@@ -137,7 +137,8 @@ void ofxOPC::writeFadeCandy(uint8_t channel, vector<ofColor>pix)
         OPC_SPC_packet_data[i].b = pix[i].b;
     }
     
-    OPC_SPC_packet->header.channel = channel;
+    OPC_SPC_packet->header.channel = channel-1;
+    //OPC_SPC_packet->header.channel = 0x00;
     
     // Send the data
     client.sendRawBytes((char *)(OPC_SPC_packet), OPC_SPC_packet_length);

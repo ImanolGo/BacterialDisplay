@@ -52,7 +52,7 @@ void DisplayFadeCandy::updateDisplayUnits(const ofRectangle &grabArea, const ofP
             int i = (channel-1)*LEDS_PER_CHANNEL + it->second->getIndex();
             
             it->second->setPixels(grabArea, screenPixels);
-            m_ledColors[i] = it->second->colorData();
+            m_ledColors[i] = it->second->getPixelColor();
             //vector<ofColor> colorData =  it->second->colorData();
             //std::copy ( colorData.begin(), colorData.end(), m_ledColors.begin() + offset);
 

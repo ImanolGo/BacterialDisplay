@@ -96,7 +96,7 @@ class DisplayUnit: public BasicVisual {
 
     
         // Return Data Method
-        const ofColor& colorData(){return m_ledColor;}
+        const ofColor& getPixelColor(){return m_ledColor;}
     
     private:
     
