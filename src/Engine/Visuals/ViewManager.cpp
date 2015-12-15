@@ -94,15 +94,16 @@ void ViewManager::update()
 
 void ViewManager::draw()
 {
-    if(!m_showDebugInfo){
-        string text = "fps: " + ofToString(ofGetFrameRate(), 2);
-        ofDrawBitmapString(text, 20, 20);
-    }
-    else{
-        this->drawBackround();
-        this->drawOverlays();
-        this->drawVisuals();
-    }
+    
+    this->drawBackround();
+    this->drawOverlays();
+    this->drawVisuals();
+    
+    ofPushStyle();
+    ofSetColor(ofColor::white);
+    string text = "fps: " + ofToString(ofGetFrameRate(), 2);
+    ofDrawBitmapString(text, 20, 20);
+    ofPopStyle();
 }
 
 void ViewManager::drawBackround()

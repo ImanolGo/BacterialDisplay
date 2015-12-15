@@ -104,7 +104,6 @@ void AppManager::draw()
     m_displayManager->draw();
     m_cameraTrackingManager->draw();
     //m_guiManager->draw();
-    
 }
 
 void AppManager::toggleDebugMode()
@@ -131,7 +130,7 @@ void AppManager::setDebugMode(bool showDebug)
     m_guiManager->showGui(m_debugMode);
     m_cameraTrackingManager->showCamera(m_debugMode);
     
-    //m_viewManager->showDebugMode(m_debugMode);
+    m_viewManager->showDebugMode(m_debugMode);
     
 }
 
