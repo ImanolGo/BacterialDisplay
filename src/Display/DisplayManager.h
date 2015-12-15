@@ -54,6 +54,8 @@ class DisplayManager: public Manager
 
     private:
     
+        void closeOPC();
+    
         void grabImageData();
     
         void setupDisplayUnits();
@@ -89,8 +91,7 @@ class DisplayManager: public Manager
         ofxOPC                 m_opcClient;                    ///< instance of the Open Pixel Control client
         DisplayVisuals         m_displayVisuals;
     
-        // Capture Objects
-        ofImage     m_screenImage;
+        // Capture Object
         ofPixels    m_screenPixels;
     
         float               m_displayUnitSize;

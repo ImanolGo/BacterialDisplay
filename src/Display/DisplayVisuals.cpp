@@ -101,6 +101,8 @@ void DisplayVisuals::drawCircle()
     
     ofDrawCircle(ofGetMouseX(),ofGetMouseY(),70);
     ofPopStyle();
+    
+     //ofLogNotice()<< "DisplayVisuals::mouse-> x = " << ofGetMouseX()  << ", y = " << ofGetMouseY();
 }
 
 void DisplayVisuals::drawParticle()

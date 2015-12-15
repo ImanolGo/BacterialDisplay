@@ -194,9 +194,14 @@ void DisplayUnit::setPixels(const ofRectangle& grabArea, const ofPixels& screenP
 {
     for (int i = 0; i < m_ledPositions.size(); i++)
     {
+        
         float x = m_ledPositions[i].x  - grabArea.x;
         float y = m_ledPositions[i].y  - grabArea.y;
         m_ledColor[i] = screenPixels.getColor(x, y).getBrightness();
+        
+        if(i==0){
+           // ofLogNotice()<< "x = " <<x << ", y = " <<y ;
+        }
         //m_ledColor = screenPixels.getColor(x, y);
     }
     

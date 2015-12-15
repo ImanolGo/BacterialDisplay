@@ -59,7 +59,7 @@ void CameraTrackingManager::setupCamera()
 void CameraTrackingManager::update()
 {
     this->updateCamera();
-    this->updateHue();
+    //this->updateHue();
 }
 
 void CameraTrackingManager::updateCamera()

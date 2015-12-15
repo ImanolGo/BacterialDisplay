@@ -24,8 +24,17 @@ DisplayManager::DisplayManager(): Manager(), m_displayUnitSize(0.0), m_showDispl
 DisplayManager::~DisplayManager()
 {
     ofLogNotice() <<"DisplayManager::Destructor" ;
+    this->closeOPC();
 }
 
+
+void DisplayManager::closeOPC()
+{
+
+    m_opcClient.close();
+    ofLogNotice() <<"DisplayManager::setupOPC ->Closing OPC Clien ";
+    
+}
 
 void DisplayManager::setup()
 {
@@ -67,7 +76,7 @@ void DisplayManager::createDisplayUnitSettings()
     
     
     m_displayUnitSize = 25;
-    float scale = m_displayUnitSize/m_displayUnitPreviewSize;
+    float scale = 1.1*m_displayUnitSize/m_displayUnitPreviewSize;
     float margin = m_displayUnitPreviewSize*marginRatio;
     float wallHeight = m_displayUnitPreviewSize*(maxNumRows);
     
@@ -82,7 +91,7 @@ void DisplayManager::createDisplayUnitSettings()
     w = wallWidth*scale;
     h = wallHeight*scale;
     x = ofGetWidth()*0.75 - w*0.5;
-    y = ofGetHeight()*0.75 - h*0.5;
+    y = ofGetHeight()*0.75 - h*0.5 - margin;
     
     m_imageSpaceRectangle = ofRectangle(x,y,w,h);
     
@@ -92,7 +101,7 @@ void DisplayManager::createDisplayUnitSettings()
     
     ofLogNotice() <<"DisplayManager::createDisplayUnitsPositions->  m_previewRectangle:  x = " << m_previewRectangle.x << ", y = " << m_previewRectangle.y << ", w = " << m_previewRectangle.width << ", h = " << m_previewRectangle.height;
     
-    ofLogNotice() <<"DisplayManager::createDisplayUnitsPositions->  m_imageSpaceRectangle:  x = " << m_imageSpaceRectangle.x << ", y = " << m_imageSpaceRectangle.y << ", w = " << m_imageSpaceRectangle.height << ", h = " << m_imageSpaceRectangle.width;
+    ofLogNotice() <<"DisplayManager::createDisplayUnitsPositions->  m_imageSpaceRectangle:  x = " << m_imageSpaceRectangle.x << ", y = " << m_imageSpaceRectangle.y << ", w = " << m_imageSpaceRectangle.width << ", h = " << m_imageSpaceRectangle.height;
     
     
 
@@ -218,7 +227,7 @@ void DisplayManager::setupOPC()
     int port = AppManager::getInstance().getSettingsManager()->getPort();
     
     // Connect to the fcserver
-    m_opcClient.setup(ipAddress, port, 1);
+    m_opcClient.setup(ipAddress, port);
     
     ofLogNotice() <<"DisplayManager::setupOPC -> Connect OPC Client to IP Address: " << ipAddress << ", port: " << port;
     
@@ -235,11 +244,30 @@ void DisplayManager::update()
 void DisplayManager::grabImageData()
 {
     m_screenPixels.clear();
-    m_screenImage.clear();
-    m_screenImage.grabScreen(m_imageSpaceRectangle.x,m_imageSpaceRectangle.y,m_imageSpaceRectangle.width,m_imageSpaceRectangle.height);
-    AppManager::getInstance().getCameraTrackingManager()->getCameraFbo().readToPixels(m_screenPixels);
-    //m_screenPixels = m_screenImage.getPixels(); // Transfer grab data to the pixel array
-    //m_screenImage.draw(0,0, 1200, 400);
+    
+    ofImage croppedImage;
+    
+   
+    //ofSetColor(0, 255, 0);
+    //ofDrawRectangle(m_imageSpaceRectangle);
+    //m_screenImage.grabScreen(m_imageSpaceRectangle.x,m_imageSpaceRectangle.y,m_imageSpaceRectangle.width,m_imageSpaceRectangle.height);
+   // ofLogNotice() <<"DisplayManager::createDisplayUnitsPositions->  m_imageSpaceRectangle:  x = " << m_imageSpaceRectangle.x << ", y = " << m_imageSpaceRectangle.y << ", w = " << m_imageSpaceRectangle.width << ", h = " << m_imageSpaceRectangle.height;
+    croppedImage.grabScreen(m_imageSpaceRectangle.x,m_imageSpaceRectangle.y,m_imageSpaceRectangle.width,m_imageSpaceRectangle.height);
+    //croppedImage.grabScreen(ofGetWidth()*0.5,ofGetHeight()*0.5,ofGetWidth()*0.5,ofGetHeight()*0.5);
+    //AppManager::getInstance().getCameraTrackingManager()->getCameraFbo().readToPixels(m_screenPixels);
+    m_screenPixels = croppedImage.getPixels(); // Transfer grab data to the pixel array
+    
+    /*int nonBlackPixels = 0;
+    for(int i = 0; i < m_screenPixels.size(); i++)
+    {
+        if(m_screenPixels.getColor(i)!= ofColor::black){
+            nonBlackPixels++;
+        }
+        
+    }*/
+    
+    //ofLogNotice() <<"DisplayManager::grabImageData -> w = : " << m_screenPixels.getWidth() <<  ", h = " << m_screenPixels.getHeight();
+    //ofLogNotice() <<"DisplayManager::grabImageData -> Non-Black Pixels: " << nonBlackPixels;
 }
 
 void DisplayManager::updateFadeCandys()
@@ -266,7 +294,8 @@ void DisplayManager::draw()
         this->drawRectangles();
         this->drawDisplayFadeCandys();
     }
-   
+    
+
 }
 
 void DisplayManager::drawDisplayFadeCandys()
@@ -282,13 +311,16 @@ void DisplayManager::drawRectangles()
     ofPushStyle();
     ofNoFill();
     ofSetLineWidth(1);
+    ofEnableAlphaBlending();
     
-    ofSetColor(255);
+    ofSetColor(255,255,255,200);
     ofDrawRectangle(m_imageSpaceRectangle);
     
     ofFill();
-    ofSetColor(150);
+    ofSetColor(150, 150, 150, 150);
     ofDrawRectangle(m_previewRectangle);
+    
+    ofDisableAlphaBlending();
     
     ofPopStyle();
     ofPopMatrix();

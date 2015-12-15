@@ -103,7 +103,7 @@ void AppManager::draw()
     m_viewManager->draw();
     m_displayManager->draw();
     m_cameraTrackingManager->draw();
-    m_guiManager->draw();
+    //m_guiManager->draw();
     
 }
 
