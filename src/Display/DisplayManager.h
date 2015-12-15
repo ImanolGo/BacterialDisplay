@@ -46,7 +46,7 @@ class DisplayManager: public Manager
         //! Set the mode of the Halo Visuals
         void setMode(int mode) {m_displayVisuals.setMode(mode);}
     
-        const ofRectangle& getRingArea() const {return m_imageSpaceRectangle;}
+        const ofRectangle& getDisplayArea() const {return m_imageSpaceRectangle;}
     
         DisplayVisuals& getDisplayVisuals(){return m_displayVisuals;}
     

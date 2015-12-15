@@ -48,13 +48,13 @@ void DisplayVisuals::setupDisplayArea()
     m_displayScale = ofPoint(1);
     m_displayOffset = ofPoint(0);
     
-    m_displayArea = AppManager::getInstance().getDisplayManager()->getRingArea();
+    m_displayArea = AppManager::getInstance().getDisplayManager()->getDisplayArea();
     
     ofLogNotice()<< "DisplayVisuals::setupDisplayArea-> x = " << m_displayArea.x  << ", y = " << m_displayArea.y;
     m_displayArea.width = AppManager::getInstance().getCameraTrackingManager()->getWidth();
     m_displayArea.height = AppManager::getInstance().getCameraTrackingManager()->getHeight();
     
-    const ofRectangle& ringArea = AppManager::getInstance().getDisplayManager()->getRingArea();
+    const ofRectangle& ringArea = AppManager::getInstance().getDisplayManager()->getDisplayArea();
     m_displayArea.scaleTo(ringArea, OF_SCALEMODE_FILL);
     
     this->calibrateDisplayArea();
@@ -84,6 +84,11 @@ void DisplayVisuals::drawVisuals()
         case 2:
         {
             this->drawParticle();
+        }
+            
+        case 3:
+        {
+            this->drawCamera();
         }
             break;
     }
@@ -121,6 +126,15 @@ void DisplayVisuals::drawParticle()
     m_imageVisual->draw();
     
     ofPopStyle();
+}
+
+void DisplayVisuals::drawCamera()
+{
+    
+    auto area =  AppManager::getInstance().getDisplayManager()->getDisplayArea();
+    auto cameraFbo = AppManager::getInstance().getCameraTrackingManager()->getCameraFbo();
+    
+    cameraFbo.draw(area);
 }
 
 

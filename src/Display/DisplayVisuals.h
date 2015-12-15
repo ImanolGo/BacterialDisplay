@@ -62,6 +62,8 @@ private:
     
     void drawParticle();
     
+    void drawCamera();
+    
     void calibrateDisplayArea();
     
     

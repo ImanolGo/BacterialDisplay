@@ -89,7 +89,7 @@ void DisplayUnitPreview::drawUnit()
     //ofEllipse(m_position.x , m_position.y, m_width-margin*2, m_height-margin*2);
     
     float angleStep = (2.0 * M_PI)/m_settings.numberLeds;
-    float offsetAngle = 0;
+    float offsetAngle = M_PI;
     
     ofFill();
     for (int i = 0; i < m_settings.numberLeds; i++)
@@ -99,7 +99,7 @@ void DisplayUnitPreview::drawUnit()
         float rx = m_position.x  + 0.5 * (m_width - margin) * cos(angle);
         float ry = m_position.y + 0.5 * (m_height - margin) * sin(angle);
         
-        ofColor color(m_ledColor[i]);
+        ofColor color(m_ledColor[i+1]);
         m_ledVisual.setColor(color);
         m_ledVisual.setPosition(ofPoint(rx,ry));
         m_ledVisual.draw();
@@ -162,7 +162,7 @@ void DisplayUnit::setupDisplayUnit()
     m_ledColor = ofColor::black;
     
     float angleStep = (2.0 * M_PI)/m_settings.numberLeds;
-    float offsetAngle = 0;
+    float offsetAngle = M_PI;
     m_margin = 10;
     
     for (int i = 0; i < m_settings.numberLeds; i++)
@@ -197,12 +197,7 @@ void DisplayUnit::setPixels(const ofRectangle& grabArea, const ofPixels& screenP
         
         float x = m_ledPositions[i].x  - grabArea.x;
         float y = m_ledPositions[i].y  - grabArea.y;
-        m_ledColor[i] = screenPixels.getColor(x, y).getBrightness();
-        
-        if(i==0){
-           // ofLogNotice()<< "x = " <<x << ", y = " <<y ;
-        }
-        //m_ledColor = screenPixels.getColor(x, y);
+        m_ledColor[i+1] = screenPixels.getColor(x, y).getBrightness();
     }
     
     m_displayUnitPreview->setColor(m_ledColor);
