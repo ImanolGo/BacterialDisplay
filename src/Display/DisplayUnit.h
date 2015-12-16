@@ -14,11 +14,16 @@
 #include "TextVisual.h"
 #include "ImageVisual.h"
 
+enum class DisplayUnitOrientation {
+    UP,
+    DOWN
+};
+
 class DisplayUnitSettings {
     
     public:
     
-    DisplayUnitSettings(): numberLeds(1), id(""), fadeCandyInd(1), channel(1), index(0){}
+    DisplayUnitSettings(): numberLeds(1), id(""), fadeCandyInd(1), channel(1), index(0), orientation(DisplayUnitOrientation::UP){}
     
     ~DisplayUnitSettings(){}
     
@@ -30,7 +35,7 @@ class DisplayUnitSettings {
     int         fadeCandyInd;
     int         channel;
     int         index;
-
+    DisplayUnitOrientation  orientation;
     
 };
 

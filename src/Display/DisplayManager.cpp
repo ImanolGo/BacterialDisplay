@@ -144,9 +144,12 @@ void DisplayManager::createDisplayUnitSettings()
         index = i % pixelsPerChannel;
         
         DisplayUnitSettings settings; settings.id = ofToString(i+1); settings.channel = channel; settings.index = index; settings.numberLeds = 2;
+        int n = i % (pixelsPerChannel/2);
+        if(n<10) {settings.orientation = DisplayUnitOrientation::UP;} else{settings.orientation = DisplayUnitOrientation::DOWN;}
+    
         m_displayUnitsSettings[i] = settings;
 
-        //ofLogNotice() <<"DisplayManager::createDisplayUnitsPreviewPositions->  channel = " << channel << ", index = " << index ;
+        //ofLogNotice() <<"DisplayManager::createDisplayUnitsPreviewPositions->  channel = " << channel << ", index = " << index << ", orientation = " << (int) settings.orientation  ;
         
         float x = m_previewRectangle.x + m_displayUnitPreviewSize*0.5 + (m_displayUnitPreviewSize + margin)*colInd*0.5;
         float y = m_previewRectangle.y + topMargin + m_displayUnitPreviewSize*0.5 + (2*m_displayUnitPreviewSize)*rowInd;

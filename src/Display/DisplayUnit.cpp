@@ -89,17 +89,19 @@ void DisplayUnitPreview::drawUnit()
     //ofEllipse(m_position.x , m_position.y, m_width-margin*2, m_height-margin*2);
     
     float angleStep = (2.0 * M_PI)/m_settings.numberLeds;
-    float offsetAngle = M_PI;
+    angleStep = M_PI/2;
+
+    float offsetAngle = 3*M_PI/4;
     
     ofFill();
     for (int i = 0; i < m_settings.numberLeds; i++)
     {
-        float angle =  i * angleStep - offsetAngle;
-        angle = 2*M_PI - angle; // Inverse the angle
+        float angle =  i * angleStep + offsetAngle;
         float rx = m_position.x  + 0.5 * (m_width - margin) * cos(angle);
         float ry = m_position.y + 0.5 * (m_height - margin) * sin(angle);
         
         ofColor color(m_ledColor[i+1]);
+        
         m_ledVisual.setColor(color);
         m_ledVisual.setPosition(ofPoint(rx,ry));
         m_ledVisual.draw();
@@ -162,13 +164,16 @@ void DisplayUnit::setupDisplayUnit()
     m_ledColor = ofColor::black;
     
     float angleStep = (2.0 * M_PI)/m_settings.numberLeds;
-    float offsetAngle = M_PI;
-    m_margin = 10;
+    angleStep = M_PI/2;
+    
+    float offsetAngle = 3*M_PI/4;
+    
+    m_margin = 5;
     
     for (int i = 0; i < m_settings.numberLeds; i++)
     {
-        float angle =  i * angleStep - offsetAngle;
-        angle = 2*M_PI - angle; // Inverse the angle
+        float angle =  i * angleStep + offsetAngle;
+
         float rx = m_position.x  + 0.5 * (m_width - m_margin) * cos(angle);
         float ry = m_position.y + 0.5 * (m_height - m_margin) * sin(angle);
         
@@ -197,7 +202,16 @@ void DisplayUnit::setPixels(const ofRectangle& grabArea, const ofPixels& screenP
         
         float x = m_ledPositions[i].x  - grabArea.x;
         float y = m_ledPositions[i].y  - grabArea.y;
-        m_ledColor[i+1] = screenPixels.getColor(x, y).getBrightness();
+        
+        if(m_settings.orientation == DisplayUnitOrientation::UP){
+            //Reversed because of the MOSFET in the chip
+            m_ledColor[i+1] = 255 - screenPixels.getColor(x, y).getBrightness();
+        }
+        else if(m_settings.orientation == DisplayUnitOrientation::DOWN){
+            //Reversed because of the MOSFET in the chip
+            m_ledColor[2-i] = 255 - screenPixels.getColor(x, y).getBrightness();
+        }
+        
     }
     
     m_displayUnitPreview->setColor(m_ledColor);
@@ -208,7 +222,7 @@ void DisplayUnit::drawGrabRegion(bool hideArea)
 {
     ofPushStyle();
     ofNoFill();
-    ofSetLineWidth(2);
+    ofSetLineWidth(1);
 
     if (hideArea == true){
         // Draw Interaction Area
@@ -221,9 +235,7 @@ void DisplayUnit::drawGrabRegion(bool hideArea)
     
     ofDrawEllipse(m_position.x, m_position.y, m_width, m_height);
     //ofDrawEllipse(m_position.x, m_position.y, m_width-m_margin*2, m_height-m_margin*2);
-    
-    float angleStep = (2.0 * M_PI)/m_settings.numberLeds;
-    float offsetAngle = 0;
+
     
     
     ofSetLineWidth(1);

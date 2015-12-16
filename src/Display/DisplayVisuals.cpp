@@ -85,6 +85,7 @@ void DisplayVisuals::drawVisuals()
         {
             this->drawParticle();
         }
+             break;
             
         case 3:
         {
