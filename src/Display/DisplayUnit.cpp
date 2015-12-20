@@ -100,7 +100,8 @@ void DisplayUnitPreview::drawUnit()
         float rx = m_position.x  + 0.5 * (m_width - margin) * cos(angle);
         float ry = m_position.y + 0.5 * (m_height - margin) * sin(angle);
         
-        ofColor color(m_ledColor[i+1]);
+        int colorInt = (2+i)%3; //Bottom Led Green, Top Led Red
+        ofColor color(m_ledColor[colorInt]);
         
         m_ledVisual.setColor(color);
         m_ledVisual.setPosition(ofPoint(rx,ry));
@@ -202,15 +203,16 @@ void DisplayUnit::setPixels(const ofRectangle& grabArea, const ofPixels& screenP
         
         float x = m_ledPositions[i].x  - grabArea.x;
         float y = m_ledPositions[i].y  - grabArea.y;
-        
+        int colorInt = (2+i)%3;
         if(m_settings.orientation == DisplayUnitOrientation::UP){
-            //Reversed because of the MOSFET in the chip
-            m_ledColor[i+1] = 255 - screenPixels.getColor(x, y).getBrightness();
+            colorInt = (2+i)%3; //Bottom Led Green, Top Led Red
         }
         else if(m_settings.orientation == DisplayUnitOrientation::DOWN){
-            //Reversed because of the MOSFET in the chip
-            m_ledColor[2-i] = 255 - screenPixels.getColor(x, y).getBrightness();
+            colorInt = (i+2)%3; //Bottom Led Red, Top Led Green
         }
+        
+        //Reversed because of the MOSFET in the chip
+        m_ledColor[colorInt] = 255 - screenPixels.getColor(x, y).getBrightness();
         
     }
     
