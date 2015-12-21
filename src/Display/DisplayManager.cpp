@@ -102,8 +102,6 @@ void DisplayManager::createDisplayUnitSettings()
     ofLogNotice() <<"DisplayManager::createDisplayUnitsPositions->  m_previewRectangle:  x = " << m_previewRectangle.x << ", y = " << m_previewRectangle.y << ", w = " << m_previewRectangle.width << ", h = " << m_previewRectangle.height;
     
     ofLogNotice() <<"DisplayManager::createDisplayUnitsPositions->  m_imageSpaceRectangle:  x = " << m_imageSpaceRectangle.x << ", y = " << m_imageSpaceRectangle.y << ", w = " << m_imageSpaceRectangle.width << ", h = " << m_imageSpaceRectangle.height;
-    
-    
 
     
     int maxUnitsInCol = 10;
@@ -144,8 +142,12 @@ void DisplayManager::createDisplayUnitSettings()
         index = i % pixelsPerChannel;
         
         DisplayUnitSettings settings; settings.id = ofToString(i+1); settings.channel = channel; settings.index = index; settings.numberLeds = 2;
+        settings.pos.x = colInd; settings.pos.y = rowInd;
+        
         int n = i % (pixelsPerChannel/2);
-        if(n<10) {settings.orientation = DisplayUnitOrientation::UP;} else{settings.orientation = DisplayUnitOrientation::DOWN;}
+        if(n<10) {
+            settings.orientation = DisplayUnitOrientation::UP;
+        } else{settings.orientation = DisplayUnitOrientation::DOWN;}
     
         m_displayUnitsSettings[i] = settings;
 

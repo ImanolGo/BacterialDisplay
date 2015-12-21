@@ -35,6 +35,7 @@ class DisplayUnitSettings {
     int         fadeCandyInd;
     int         channel;
     int         index;
+    ofPoint     pos;
     DisplayUnitOrientation  orientation;
     
 };
@@ -112,6 +113,8 @@ class DisplayUnit: public BasicVisual {
         void drawGrabRegion(bool hideArea = false);
     
         void drawID(bool hideText = false);
+    
+        float getNoise(int index);
     
     private:
             

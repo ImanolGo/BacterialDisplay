@@ -212,11 +212,24 @@ void DisplayUnit::setPixels(const ofRectangle& grabArea, const ofPixels& screenP
         }
         
         //Reversed because of the MOSFET in the chip
-        m_ledColor[colorInt] = 255 - screenPixels.getColor(x, y).getBrightness();
+        m_ledColor[colorInt] = 255 - screenPixels.getColor(x, y).getBrightness()*getNoise(i);
         
     }
     
     m_displayUnitPreview->setColor(m_ledColor);
+}
+
+
+float DisplayUnit::getNoise(int index)
+{
+    float noiseSpeed = 0.1;
+    float noiseFrequency = 1;
+    float time = ofGetElapsedTimef() * noiseSpeed;
+    
+    float tmpNoise = ofNoise( m_settings.pos.x/ noiseFrequency,  (m_settings.pos.y+0.3*index)/ noiseFrequency, time );
+    tmpNoise = ofMap(tmpNoise, 0.0, 1.0, 0.7, 1.0);
+    
+    return tmpNoise;
 }
 
 //--------------------------------------------------------------
