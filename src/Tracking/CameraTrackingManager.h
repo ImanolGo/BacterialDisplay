@@ -11,7 +11,9 @@
 #include "Manager.h"
 
 #if defined( TARGET_LINUX_ARM )
+    #include "TerminalListener.h"
     #include "ofxRPiCameraVideoGrabber.h"
+    #include "ImageFilterCollection.h"
 #endif
 
 
