@@ -63,6 +63,8 @@ public:
     void onHueAlphaChange(float & value);
     
     void onHueChangeRate(float & value);
+    
+   // void onCharacterReceived(KeyListenerEventData& e);
    
     
 private:

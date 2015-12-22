@@ -61,7 +61,7 @@ void CameraTrackingManager::setupCamera()
     
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> setup console";
         //allows keys to be entered via terminal remotely (ssh)
-        m_consoleListener.setup(this);
+        m_consoleListener.setup(&AppManager::getInstance());
     
     
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> camera settings";
@@ -165,6 +165,7 @@ void CameraTrackingManager::drawHueColor()
     ofPopStyle();
     
 }
+
 
 
 //--------------------------------------------------------------
