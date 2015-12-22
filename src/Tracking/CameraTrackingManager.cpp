@@ -52,6 +52,12 @@ void CameraTrackingManager::setupCamera()
     m_cameraArea.x = ofGetWidth()*0.75 -  m_cameraArea.width*0.5;
     m_cameraArea.y = ofGetHeight()*0.25 -  m_cameraArea.height*0.5;
     
+    ofLogNotice() <<"CameraTrackingManager::OS X target";
+    m_videoGrabber.setDeviceID(0);
+    m_videoGrabber.setDesiredFrameRate(60);
+    m_videoGrabber.initGrabber(CAMERA_WIDTH,CAMERA_HEIGHT);
+    
+    return;
     
     #if defined( TARGET_LINUX_ARM )
         ofLogNotice() <<"CameraTrackingManager::Linux Target";
@@ -83,7 +89,8 @@ void CameraTrackingManager::update()
 
 void CameraTrackingManager::updateCamera()
 {
-    
+     m_videoGrabber.update();
+    return;
     
     #if defined( TARGET_LINUX_ARM )
     
@@ -120,8 +127,10 @@ void CameraTrackingManager::drawCamera()
     
     ofSetColor(ofColor::white);
     
+    m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
+    
     #if defined( TARGET_LINUX_ARM )
-        m_videoTexture.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
+      //  m_videoTexture.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     #else
         m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     #endif
