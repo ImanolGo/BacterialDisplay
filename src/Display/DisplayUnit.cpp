@@ -100,7 +100,12 @@ void DisplayUnitPreview::drawUnit()
         float rx = m_position.x  + 0.5 * (m_width - margin) * cos(angle);
         float ry = m_position.y + 0.5 * (m_height - margin) * sin(angle);
         
-        int colorInt = (2+i)%3; //Bottom Led Green, Top Led Red
+        
+        int colorInt = (2+i)%3; // DisplayUnitOrientation::UP -> Bottom Led Blue, Top Led Red
+        if(m_settings.orientation == DisplayUnitOrientation::DOWN){
+            colorInt = 2 - colorInt; //Bottom Led Red, Top Led Blue
+        }
+        
         ofColor color(m_ledColor[colorInt]);
         
         m_ledVisual.setColor(color);
@@ -203,12 +208,10 @@ void DisplayUnit::setPixels(const ofRectangle& grabArea, const ofPixels& screenP
         
         float x = m_ledPositions[i].x  - grabArea.x;
         float y = m_ledPositions[i].y  - grabArea.y;
-        int colorInt = (2+i)%3;
-        if(m_settings.orientation == DisplayUnitOrientation::UP){
-            colorInt = (2+i)%3; //Bottom Led Green, Top Led Red
-        }
-        else if(m_settings.orientation == DisplayUnitOrientation::DOWN){
-            colorInt = (i+2)%3; //Bottom Led Red, Top Led Green
+        
+        int colorInt = (2+i)%3; // DisplayUnitOrientation::UP -> Bottom Led Blue, Top Led Red
+        if(m_settings.orientation == DisplayUnitOrientation::DOWN){
+            colorInt = 2 - colorInt; //Bottom Led Red, Top Led Blue
         }
         
         //Reversed because of the MOSFET in the chip

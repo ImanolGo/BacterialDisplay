@@ -151,7 +151,7 @@ void DisplayManager::createDisplayUnitSettings()
     
         m_displayUnitsSettings[i] = settings;
 
-        //ofLogNotice() <<"DisplayManager::createDisplayUnitsPreviewPositions->  channel = " << channel << ", index = " << index << ", orientation = " << (int) settings.orientation  ;
+        ofLogNotice() <<"DisplayManager::createDisplayUnitsPreviewPositions->  channel = " << channel << ", index = " << index << ", orientation = " << (int) settings.orientation  ;
         
         float x = m_previewRectangle.x + m_displayUnitPreviewSize*0.5 + (m_displayUnitPreviewSize + margin)*colInd*0.5;
         float y = m_previewRectangle.y + topMargin + m_displayUnitPreviewSize*0.5 + (2*m_displayUnitPreviewSize)*rowInd;
