@@ -42,6 +42,8 @@ void CameraTrackingManager::setup()
 
 void CameraTrackingManager::setupCamera()
 {
+    ofLogNotice() <<"CameraTrackingManager::setupCamera";
+    
     m_cameraFbo.allocate(CAMERA_WIDTH, CAMERA_HEIGHT, GL_RGBA);
     m_cameraFbo.begin(); ofClear(0); m_cameraFbo.end();
     
@@ -52,6 +54,7 @@ void CameraTrackingManager::setupCamera()
     
     
     #if defined( TARGET_LINUX_ARM )
+        ofLogNotice() <<"CameraTrackingManager::Linux Target";
         m_omxCameraSettings.width = CAMERA_WIDTH;
         m_omxCameraSettings.height = CAMERA_HEIGHT;
         m_omxCameraSettings.framerate = 30;
@@ -62,6 +65,7 @@ void CameraTrackingManager::setupCamera()
         m_videoGrabberPi.setup(m_omxCameraSettings);
     #else
     
+        ofLogNotice() <<"CameraTrackingManager::OS X target";
         m_videoGrabber.setDeviceID(0);
         m_videoGrabber.setDesiredFrameRate(60);
         m_videoGrabber.initGrabber(CAMERA_WIDTH,CAMERA_HEIGHT);
