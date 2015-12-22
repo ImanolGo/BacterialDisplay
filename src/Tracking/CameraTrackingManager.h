@@ -91,8 +91,9 @@ private:
     
     #if defined( TARGET_LINUX_ARM )
         ofxRPiCameraVideoGrabber m_videoGrabberPi;
-        ofTexture m_videoTexture;
         OMXCameraSettings m_omxCameraSettings;
+        TerminalListener m_consoleListener;
+        ImageFilterCollection m_filterCollection;
     #endif
     
 };

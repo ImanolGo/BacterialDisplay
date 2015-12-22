@@ -52,24 +52,31 @@ void CameraTrackingManager::setupCamera()
     m_cameraArea.x = ofGetWidth()*0.75 -  m_cameraArea.width*0.5;
     m_cameraArea.y = ofGetHeight()*0.25 -  m_cameraArea.height*0.5;
     
-    ofLogNotice() <<"CameraTrackingManager::OS X target";
-    m_videoGrabber.setDeviceID(0);
-    m_videoGrabber.setDesiredFrameRate(60);
-    m_videoGrabber.initGrabber(CAMERA_WIDTH,CAMERA_HEIGHT);
-    
-    return;
     
     #if defined( TARGET_LINUX_ARM )
-        ofLogNotice() <<"CameraTrackingManager::Linux Target";
+        ofLogNotice() <<"CameraTrackingManager::setupCamera-> Linux Target";
+    
+        ofLogNotice() <<"CameraTrackingManager::setupCamera->  ofSetLogLevel  ofThread";
+        ofSetLogLevel("ofThread", OF_LOG_ERROR);
+    
+        ofLogNotice() <<"CameraTrackingManager::setupCamera-> setup console";
+        //allows keys to be entered via terminal remotely (ssh)
+        m_consoleListener.setup(this);
+    
+    
+        ofLogNotice() <<"CameraTrackingManager::setupCamera-> camera settings";
         m_omxCameraSettings.width = CAMERA_WIDTH;
         m_omxCameraSettings.height = CAMERA_HEIGHT;
-        ofLogNotice() <<"CameraTrackingManager::Linux Target";
         m_omxCameraSettings.framerate = 30;
         m_omxCameraSettings.isUsingTexture = true;
-        m_omxCameraSettings.enablePixels = true;
+        m_omxCameraSettings.doRecording = false;   //default false
     
-        m_videoTexture.allocate(m_omxCameraSettings.width, m_omxCameraSettings.height, GL_RGBA);
+        ofLogNotice() <<"CameraTrackingManager::setupCamera-> video grabber";
         m_videoGrabberPi.setup(m_omxCameraSettings);
+    
+        ofLogNotice() <<"CameraTrackingManager::setupCamera-> image filter";
+        //ImageFilterCollection (filterCollection here) is helper class to iterate through available OpenMax filters
+        m_filterCollection.setup();
     #else
     
         ofLogNotice() <<"CameraTrackingManager::OS X target";
@@ -89,16 +96,14 @@ void CameraTrackingManager::update()
 
 void CameraTrackingManager::updateCamera()
 {
-     m_videoGrabber.update();
-    return;
     
     #if defined( TARGET_LINUX_ARM )
     
-        m_videoTexture.loadData(m_videoGrabberPi.getPixels(), m_omxCameraSettings.width, m_omxCameraSettings.height, GL_RGBA);
+       // m_videoTexture.loadData(m_videoGrabberPi.getPixels(), m_omxCameraSettings.width, m_omxCameraSettings.height, GL_RGBA);
    
     #else
     
-    m_videoGrabber.update();
+        m_videoGrabber.update();
     
     #endif
 }
@@ -127,10 +132,9 @@ void CameraTrackingManager::drawCamera()
     
     ofSetColor(ofColor::white);
     
-    m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
-    
+       
     #if defined( TARGET_LINUX_ARM )
-      //  m_videoTexture.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
+        m_videoGrabberPi.getTextureReference().draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     #else
         m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     #endif

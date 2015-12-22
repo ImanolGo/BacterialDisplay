@@ -2,7 +2,7 @@
 <settings>
 
   <of_settings>
-	<window title="Bacterial Display" x="0" y="0" width="1920" height="1080" fullscreen="0"/>
+	<window title="Bacterial Display" x="0" y="0" width="1280" height="1024" fullscreen="0"/>
 	<debug showCursor="1" setVerbose="0"/>
 	<network ipAddress="127.0.0.1" port="7890"/>
   </of_settings>
