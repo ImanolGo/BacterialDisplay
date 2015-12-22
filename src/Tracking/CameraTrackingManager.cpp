@@ -57,6 +57,7 @@ void CameraTrackingManager::setupCamera()
         ofLogNotice() <<"CameraTrackingManager::Linux Target";
         m_omxCameraSettings.width = CAMERA_WIDTH;
         m_omxCameraSettings.height = CAMERA_HEIGHT;
+        ofLogNotice() <<"CameraTrackingManager::Linux Target";
         m_omxCameraSettings.framerate = 30;
         m_omxCameraSettings.isUsingTexture = true;
         m_omxCameraSettings.enablePixels = true;

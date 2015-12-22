@@ -1,44 +1,43 @@
 #!/bin/bash
 
 #-----------------------------------------------------------
-# 
-# start Halo Light Application
+#
+# start Bacterial Display Application
 #
 #-----------------------------------------------------------
 
-echo '-> Halo Light Script'
+echo '-> Bacterial Display Script'
 
 dir=$(dirname $0)
 cd $dir
 
 echo '-> Starting Fade Candy Server'
 
-PROCESS=fcserver-osx
+PROCESS=fcserver-rpi
 
 if pgrep $PROCESS
 	then
-		echo '-> fcserver-osx process already exit'
+		echo '-> fcserver-rpi process already exit'
 	else
 		cd ../fcserver
-		./fcserver-osx ServerConfig.json &
-		echo '-> Starting fcserver-osx'
+		./fcserver-rpi &
+		echo '-> Starting fcserver-rpi'
 fi
 
 
 
-echo '-> Starting Halo Light Application'
+echo '-> Starting Bacterial Display Application'
 
-PROCESS=HaloLight
+PROCESS=BacterialDisplay
 
 if pgrep $PROCESS
 	then
-		echo '-> killing HaloLight process...'
-		killall -15 HaloLight
-		
+		echo '-> killing BacterialDisplay process...'
+		killall -15 BacterialDisplay
+
 fi
 
-echo '-> starting HaloLight process...'
+echo '-> starting BacterialDisplay process...'
 
-cd ../bin/HaloLight.app/Contents/MacOS/
-./HaloLight
-
+cd ../bin
+./BacterialDisplay
