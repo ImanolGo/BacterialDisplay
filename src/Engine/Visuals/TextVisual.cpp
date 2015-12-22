@@ -45,7 +45,7 @@ void TextVisual::setText(const std::string& text, const std::string& fontName, f
     m_font.setup(fontName,m_fontSize);
 
     if(m_centred){
-        m_font.setTextBlockAlignment(Font::OF_TEXT_ALIGN_CENTER);
+        m_font.setTextBlockAlignment(EngineFont::OF_TEXT_ALIGN_CENTER);
     }
 
     m_box =  m_font.drawMultiLineColumn(m_text,m_position.x,m_position.y,m_width);

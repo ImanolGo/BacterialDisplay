@@ -8,7 +8,7 @@
 #pragma once
 
 
-#include "Font.h"
+#include "EngineFont.h"
 
 
 #include "BasicVisual.h"
@@ -54,7 +54,7 @@ class TextVisual: public BasicVisual
 
     private:
 
-        Font              m_font;		 ///< Font class
+        EngineFont        m_font;		 ///< EngineFont class
         std::string       m_text;        ///< text to be rendered
         float             m_fontSize;    ///< saves the font size
         bool              m_centred;     ///< determines whether the visual is centred or not

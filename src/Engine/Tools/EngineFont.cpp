@@ -1,5 +1,5 @@
 /*
- *  Font.h
+ *  EngineFont.h
  *
  *  Created by Imanol Gomez on 23/02/15.
  *
@@ -7,21 +7,21 @@
 
 
 #include <iostream>
-#include "Font.h"
+#include "EngineFont.h"
 
 /* *********************************************************************** */
 
-Font::Font():m_lineHeight(1.0),m_batchDrawing(false),m_textBlockAlignment(OF_TEXT_ALIGN_LEFT)
+EngineFont::EngineFont():m_lineHeight(1.0),m_batchDrawing(false),m_textBlockAlignment(OF_TEXT_ALIGN_LEFT)
 {
 	//Intentionally left empty
 }
 
-Font::~Font()
+EngineFont::~EngineFont()
 {
 	//Intentionally left empty
 }
 
-bool Font::setup( string fontFile, float fontSize, float lineHeightPercent)
+bool EngineFont::setup( string fontFile, float fontSize, float lineHeightPercent)
 {
 
     //m_trueTypeFont.setEncoding(OF_ENCODING_UTF8);
@@ -35,11 +35,11 @@ bool Font::setup( string fontFile, float fontSize, float lineHeightPercent)
     int dpi=0.0;
 
 	if(m_trueTypeFont.load(fontFile,fontSize,bAntiAliased,bFullCharacterSet,makeContours,simplifyAmt,dpi)){
-	    //ofLogNotice() << "Font::setup-> font loaded " << fontFile << " with size " << fontSize;
+	    //ofLogNotice() << "EngineFont::setup-> font loaded " << fontFile << " with size " << fontSize;
         return true;
 	}
 	else{
-         ofLogNotice() << "Font::setup-> Can't load font " << fontFile << "!!";
+         ofLogNotice() << "EngineFont::setup-> Can't load font " << fontFile << "!!";
         return false;
 	}
 
@@ -47,7 +47,7 @@ bool Font::setup( string fontFile, float fontSize, float lineHeightPercent)
 }
 
 
-void Font::draw( string text, float x, float y)
+void EngineFont::draw( string text, float x, float y)
 {
     if(!m_trueTypeFont.isLoaded()){
         return;
@@ -56,7 +56,7 @@ void Font::draw( string text, float x, float y)
     m_trueTypeFont.drawString(text,x,y);
 }
 
-void Font::drawMultiLine( string text, float x, float y)
+void EngineFont::drawMultiLine( string text, float x, float y)
 {
     if(!m_trueTypeFont.isLoaded()){
         return;
@@ -76,7 +76,7 @@ void Font::drawMultiLine( string text, float x, float y)
     }
 }
 
-ofRectangle Font::drawMultiLineColumn( string text, float x, float y, float columnWidth)
+ofRectangle EngineFont::drawMultiLineColumn( string text, float x, float y, float columnWidth)
 {
 
     ofRectangle totalArea = ofRectangle(x,y,0,0);
@@ -182,7 +182,7 @@ ofRectangle Font::drawMultiLineColumn( string text, float x, float y, float colu
 	return totalArea;
 }
 
-string Font::walkAndFill(ofUTF8Ptr begin, ofUTF8Ptr & iter, ofUTF8Ptr end){
+string EngineFont::walkAndFill(ofUTF8Ptr begin, ofUTF8Ptr & iter, ofUTF8Ptr end){
 
 	string finalLine = "";
 	ofUTF8Ptr i = begin;
@@ -196,6 +196,6 @@ string Font::walkAndFill(ofUTF8Ptr begin, ofUTF8Ptr & iter, ofUTF8Ptr end){
 }
 
 
-void Font::setLineHeight(float percent){
+void EngineFont::setLineHeight(float percent){
 	m_lineHeight = percent;
 }

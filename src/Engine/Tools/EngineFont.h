@@ -1,5 +1,5 @@
 /*
- *  Font.cpp
+ *  EngineFont.cpp
  *
  *  Created by Imanol Gomez on 23/02/15.
  *
@@ -15,14 +15,14 @@
 #include "ofTextConverter.h"
 
 
-class Font{
+class EngineFont{
 
 	public:
 
         enum TextBlockAlignment { OF_TEXT_ALIGN_LEFT, OF_TEXT_ALIGN_RIGHT, OF_TEXT_ALIGN_CENTER };
 
-		Font();
-		~Font();
+		EngineFont();
+		~EngineFont();
 
 		//call this to set your font file (.ttf, etc)
 		bool setup( string fontFile, float fontSize, float lineHeightPercent = 1.0f);
@@ -56,5 +56,3 @@ class Font{
 		bool				m_batchDrawing;
 
 };
-
-
