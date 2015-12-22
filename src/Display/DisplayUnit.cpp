@@ -222,12 +222,12 @@ void DisplayUnit::setPixels(const ofRectangle& grabArea, const ofPixels& screenP
 
 float DisplayUnit::getNoise(int index)
 {
-    float noiseSpeed = 0.1;
+    float noiseSpeed = 3.0;
     float noiseFrequency = 1;
     float time = ofGetElapsedTimef() * noiseSpeed;
     
     float tmpNoise = ofNoise( m_settings.pos.x/ noiseFrequency,  (m_settings.pos.y+0.3*index)/ noiseFrequency, time );
-    tmpNoise = ofMap(tmpNoise, 0.0, 1.0, 0.7, 1.0);
+    //tmpNoise = ofMap(tmpNoise, 0.0, 1.0, 0.2, 1.0);
     
     return tmpNoise;
 }
