@@ -44,15 +44,29 @@ void CameraTrackingManager::setupCamera()
 {
     m_cameraFbo.allocate(CAMERA_WIDTH, CAMERA_HEIGHT, GL_RGBA);
     m_cameraFbo.begin(); ofClear(0); m_cameraFbo.end();
-
-    m_videoGrabber.setDeviceID(0);
-    m_videoGrabber.setDesiredFrameRate(60);
-    m_videoGrabber.initGrabber(CAMERA_WIDTH,CAMERA_HEIGHT);
     
     m_cameraArea.width = ofGetWidth()*0.25;
     m_cameraArea.height = m_cameraArea.width*CAMERA_HEIGHT/CAMERA_WIDTH;
     m_cameraArea.x = ofGetWidth()*0.75 -  m_cameraArea.width*0.5;
     m_cameraArea.y = ofGetHeight()*0.25 -  m_cameraArea.height*0.5;
+    
+    
+    #if defined( TARGET_LINUX_ARM )
+        m_omxCameraSettings.width = CAMERA_WIDTH;
+        m_omxCameraSettings.height = CAMERA_HEIGHT;
+        m_omxCameraSettings.framerate = 30;
+        m_omxCameraSettings.isUsingTexture = true;
+        m_omxCameraSettings.enablePixels = true;
+    
+        m_videoTexture.allocate(m_omxCameraSettings.width, m_omxCameraSettings.height, GL_RGBA);
+        m_videoGrabberPi.setup(m_omxCameraSettings);
+    #else
+    
+        m_videoGrabber.setDeviceID(0);
+        m_videoGrabber.setDesiredFrameRate(60);
+        m_videoGrabber.initGrabber(CAMERA_WIDTH,CAMERA_HEIGHT);
+    
+    #endif
     
 }
 
@@ -64,7 +78,17 @@ void CameraTrackingManager::update()
 
 void CameraTrackingManager::updateCamera()
 {
+    
+    
+    #if defined( TARGET_LINUX_ARM )
+    
+        m_videoTexture.loadData(m_videoGrabberPi.getPixels(), m_omxCameraSettings.width, m_omxCameraSettings.height, GL_RGBA);
+   
+    #else
+    
     m_videoGrabber.update();
+    
+    #endif
 }
 
 void CameraTrackingManager::updateHue()
@@ -90,13 +114,22 @@ void CameraTrackingManager::drawCamera()
     m_cameraFbo.begin();
     
     ofSetColor(ofColor::white);
-    m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
+    
+    #if defined( TARGET_LINUX_ARM )
+        m_videoTexture.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
+    #else
+        m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
+    #endif
+    
+    
     //this->drawHueColor();
     
     m_cameraFbo.end();
     
     //m_cameraFbo.draw(m_cameraArea.x,m_cameraArea.y,m_cameraArea.width,m_cameraArea.height);
     if(m_showCamera){
+        
+        
         m_cameraFbo.draw(m_cameraArea.x,m_cameraArea.y,m_cameraArea.width,m_cameraArea.height);
         //m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     }

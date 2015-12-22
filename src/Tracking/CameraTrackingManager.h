@@ -10,6 +10,10 @@
 
 #include "Manager.h"
 
+#if defined( TARGET_LINUX_ARM )
+    #include "ofxRPiCameraVideoGrabber.h"
+#endif
+
 
 
 //========================== class CameraTrackingManager ==============================
@@ -84,6 +88,12 @@ private:
     ofFbo				m_cameraFbo;
     
     bool                m_showCamera;
+    
+    #if defined( TARGET_LINUX_ARM )
+        ofxRPiCameraVideoGrabber m_videoGrabberPi;
+        ofTexture m_videoTexture;
+        OMXCameraSettings m_omxCameraSettings;
+    #endif
     
 };
 
