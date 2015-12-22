@@ -11,9 +11,7 @@
 #include "Manager.h"
 
 #if defined( TARGET_LINUX_ARM )
-    #include "TerminalListener.h"
     #include "ofxRPiCameraVideoGrabber.h"
-    #include "ImageFilterCollection.h"
 #endif
 
 
@@ -64,7 +62,6 @@ public:
     
     void onHueChangeRate(float & value);
     
-   // void onCharacterReceived(KeyListenerEventData& e);
    
     
 private:
@@ -96,8 +93,6 @@ private:
     #if defined( TARGET_LINUX_ARM )
         ofxRPiCameraVideoGrabber m_videoGrabberPi;
         OMXCameraSettings m_omxCameraSettings;
-        TerminalListener m_consoleListener;
-        ImageFilterCollection m_filterCollection;
     #endif
     
 };

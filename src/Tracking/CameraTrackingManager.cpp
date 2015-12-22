@@ -59,9 +59,8 @@ void CameraTrackingManager::setupCamera()
         ofLogNotice() <<"CameraTrackingManager::setupCamera->  ofSetLogLevel  ofThread";
         ofSetLogLevel("ofThread", OF_LOG_ERROR);
     
-        ofLogNotice() <<"CameraTrackingManager::setupCamera-> setup console";
+       // ofLogNotice() <<"CameraTrackingManager::setupCamera-> setup console";
         //allows keys to be entered via terminal remotely (ssh)
-        m_consoleListener.setup(&AppManager::getInstance());
     
     
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> camera settings";
@@ -74,9 +73,6 @@ void CameraTrackingManager::setupCamera()
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> video grabber";
         m_videoGrabberPi.setup(m_omxCameraSettings);
     
-        ofLogNotice() <<"CameraTrackingManager::setupCamera-> image filter";
-        //ImageFilterCollection (filterCollection here) is helper class to iterate through available OpenMax filters
-        m_filterCollection.setup();
     #else
     
         ofLogNotice() <<"CameraTrackingManager::OS X target";

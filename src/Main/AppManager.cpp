@@ -77,13 +77,13 @@ void AppManager::setupOF()
 
 void AppManager::setupManagers()
 {
+    m_cameraTrackingManager->setup();
     m_settingsManager->setup();
     m_resourceManager->setup();
     m_viewManager->setup();
     m_visualEffectsManager->setup();
     m_layoutManager->setup();
     m_keyboardManager->setup();
-    m_cameraTrackingManager->setup();
     m_displayManager->setup();
     m_guiManager->setup();
 
