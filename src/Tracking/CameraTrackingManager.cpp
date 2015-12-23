@@ -62,6 +62,9 @@ void CameraTrackingManager::setupCamera()
        // ofLogNotice() <<"CameraTrackingManager::setupCamera-> setup console";
         //allows keys to be entered via terminal remotely (ssh)
     
+        ofLogNotice() <<"CameraTrackingManager::setupCamera-> setup filters";
+
+        m_filterCollection.setup("Posterise");
     
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> camera settings";
         m_omxCameraSettings.width = CAMERA_WIDTH;

@@ -12,6 +12,7 @@
 
 #if defined( TARGET_LINUX_ARM )
     #include "ofxRPiCameraVideoGrabber.h"
+    #include "ImageFilterCollection.h"
 #endif
 
 
@@ -93,6 +94,7 @@ private:
     #if defined( TARGET_LINUX_ARM )
         ofxRPiCameraVideoGrabber m_videoGrabberPi;
         OMXCameraSettings m_omxCameraSettings;
+        ImageFilterCollection m_filterCollection;
     #endif
     
 };
