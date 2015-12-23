@@ -64,8 +64,8 @@ void CameraTrackingManager::setupCamera()
     
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> setup filters";
 
-        m_filterCollection.setup("Posterise");
-        
+        m_filterCollection.setup("Pastel");
+    
     
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> camera settings";
         m_omxCameraSettings.width = CAMERA_WIDTH;
@@ -76,7 +76,7 @@ void CameraTrackingManager::setupCamera()
     
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> video grabber";
         m_videoGrabberPi.setup(m_omxCameraSettings);
-        m_videoGrabberPi.applyImageFilter(m_filterCollection.setCurrentFilter(20));
+        m_videoGrabberPi.applyImageFilter(m_filterCollection.getNextFilter());
     
     #else
     
