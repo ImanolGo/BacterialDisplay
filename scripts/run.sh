@@ -30,14 +30,15 @@ echo '-> Starting Bacterial Display Application'
 
 PROCESS=BacterialDisplay
 
-if pgrep $PROCESS
-	then
-		echo '-> killing BacterialDisplay process...'
-		killall -15 BacterialDisplay
-
-fi
-
-echo '-> starting BacterialDisplay process...'
-
 cd ../bin
-./BacterialDisplay
+
+while true; do
+	if pgrep $PROCESS
+		then
+			echo '-> BacterialDisplay process already exit'
+		else
+			echo '-> Starting BacterialDisplay process...'
+			./BacterialDisplay &
+	fi
+	sleep 30
+done
