@@ -64,7 +64,7 @@ void CameraTrackingManager::setupCamera()
     
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> setup filters";
 
-        m_filterCollection.setup("Pastel");
+        //m_filterCollection.setup("Pastel");
     
     
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> camera settings";
@@ -76,7 +76,7 @@ void CameraTrackingManager::setupCamera()
     
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> video grabber";
         m_videoGrabberPi.setup(m_omxCameraSettings);
-        m_videoGrabberPi.applyImageFilter(m_filterCollection.getNextFilter());
+        //m_videoGrabberPi.applyImageFilter(m_filterCollection.getNextFilter());
     
     #else
     
