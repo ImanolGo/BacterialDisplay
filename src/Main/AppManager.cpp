@@ -77,8 +77,8 @@ void AppManager::setupOF()
 
 void AppManager::setupManagers()
 {
-    m_cameraTrackingManager->setup();
     m_settingsManager->setup();
+    m_cameraTrackingManager->setup();
     m_resourceManager->setup();
     m_viewManager->setup();
     m_visualEffectsManager->setup();
