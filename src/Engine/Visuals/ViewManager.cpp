@@ -44,7 +44,7 @@ void ViewManager::setup()
 void ViewManager::setupGL()
 {
     
-    ofSetVerticalSync(false);
+    ofSetVerticalSync(true);
     ofEnableLighting();
     ofEnableAlphaBlending();
     ofEnableSmoothing();

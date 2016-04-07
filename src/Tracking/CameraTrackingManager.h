@@ -15,7 +15,7 @@
     #include "ImageFilterCollection.h"
 #endif
 
-
+#include "ofxOpenCv.h"
 
 //========================== class CameraTrackingManager ==============================
 //============================================================================
@@ -57,6 +57,8 @@ public:
     
     const ofFbo& getCameraFbo(){return m_cameraFbo;}
     
+    const ofxCvGrayscaleImage& getTrackedImage(){return m_grayDiff;}
+    
     void onHueChange(float & value);
     
     void onHueAlphaChange(float & value);
@@ -70,9 +72,13 @@ private:
     //! Set-up the camera tracking
     void setupCamera();
     
+    void setupOpenCv();
+    
     void updateCamera();
     
     void updateHue();
+    
+    void updateOpenCv();
     
     void drawCamera();
     
@@ -96,6 +102,12 @@ private:
         OMXCameraSettings m_omxCameraSettings;
         ImageFilterCollection m_filterCollection;
     #endif
+    
+    
+    ofxCvColorImage         m_colorImg;
+    ofxCvGrayscaleImage 	m_grayImage;
+    ofxCvGrayscaleImage 	m_grayBg;
+    ofxCvGrayscaleImage 	m_grayDiff;
     
 };
 
