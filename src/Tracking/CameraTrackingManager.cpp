@@ -89,6 +89,8 @@ void CameraTrackingManager::setupCamera()
 
 void CameraTrackingManager::setupOpenCv()
 {
+    m_trackingFbo.allocate(CAMERA_WIDTH,CAMERA_HEIGHT,GL_RGBA);
+    m_trackingFbo.begin(); ofClear(0); m_trackingFbo.end();
     m_colorImg.allocate(CAMERA_WIDTH,CAMERA_HEIGHT);
     m_grayImage.allocate(CAMERA_WIDTH,CAMERA_HEIGHT);
     m_grayBg.allocate(CAMERA_WIDTH,CAMERA_HEIGHT);
@@ -127,7 +129,7 @@ void CameraTrackingManager::updateOpenCv()
      m_grayDiff.absDiff(m_grayBg, m_grayImage);
      m_grayBg = m_grayImage;
 
-     int threshold = 10;
+     int threshold = 30;
      m_grayDiff.threshold(threshold);
 
 }
@@ -142,6 +144,8 @@ void CameraTrackingManager::updateHue()
 void CameraTrackingManager::draw()
 {
     this->drawCamera();
+    
+    this->drawTracking();
     //ofSetColor(ofColor::white);
     //m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     //m_videoGrabber.draw(0, 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight());
@@ -177,6 +181,31 @@ void CameraTrackingManager::drawCamera()
         //m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     }
     ofPopStyle();
+}
+
+void CameraTrackingManager::drawTracking()
+{
+    ofEnableAlphaBlending();
+    m_trackingFbo.begin();
+    
+    
+        ofPushStyle();
+
+        ofFill();
+        ofSetColor(0,0,0,8);
+        ofDrawRectangle(0,0,m_trackingFbo.getWidth(),m_trackingFbo.getHeight());
+        ofEnableBlendMode(OF_BLENDMODE_ADD);
+        ofSetColor(255,255,255);
+        m_grayDiff.draw(0,0);
+    
+        ofPopStyle();
+    
+    
+    m_trackingFbo.end();
+    ofDisableAlphaBlending();
+
+    
+    
 }
 
 void CameraTrackingManager::drawHueColor()

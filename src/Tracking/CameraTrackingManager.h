@@ -57,7 +57,7 @@ public:
     
     const ofFbo& getCameraFbo(){return m_cameraFbo;}
     
-    const ofxCvGrayscaleImage& getTrackedImage(){return m_grayDiff;}
+    const ofFbo& getTrackedImage(){return m_trackingFbo;}
     
     void onHueChange(float & value);
     
@@ -82,6 +82,8 @@ private:
     
     void drawCamera();
     
+    void drawTracking();
+    
     void drawHueColor();
     
 private:
@@ -94,6 +96,7 @@ private:
     ofRectangle         m_cameraArea;
     
     ofFbo				m_cameraFbo;
+    ofFbo				m_trackingFbo;
     
     bool                m_showCamera;
     
