@@ -28,7 +28,7 @@ fi
 
 echo '-> Starting Bacterial Display Application'
 
-PROCESS=BacterialDisplay
+PROCESS=BacterialDispla
 
 cd ../bin
 
