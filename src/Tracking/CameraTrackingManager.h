@@ -84,6 +84,10 @@ private:
     
     void drawTracking();
     
+    void drawROI();
+    
+    void drawGrayDiff();
+    
     void drawHueColor();
     
 private:
@@ -111,6 +115,11 @@ private:
     ofxCvGrayscaleImage 	m_grayImage;
     ofxCvGrayscaleImage 	m_grayBg;
     ofxCvGrayscaleImage 	m_grayDiff;
+    
+    ofxCvHaarFinder         m_finder;
+    
+    ofRectangle             m_roi;
+    ofPixels                m_pixels;
     
 };
 

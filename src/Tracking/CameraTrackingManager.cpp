@@ -10,8 +10,8 @@
 
 #include "CameraTrackingManager.h"
 
-const int CameraTrackingManager::CAMERA_WIDTH = 320;
-const int CameraTrackingManager::CAMERA_HEIGHT = 240;
+const int CameraTrackingManager::CAMERA_WIDTH = 320; //320
+const int CameraTrackingManager::CAMERA_HEIGHT = 240; //240
 
 CameraTrackingManager::CameraTrackingManager(): Manager()
 {
@@ -89,12 +89,14 @@ void CameraTrackingManager::setupCamera()
 
 void CameraTrackingManager::setupOpenCv()
 {
-    m_trackingFbo.allocate(CAMERA_WIDTH,CAMERA_HEIGHT,GL_RGBA);
+    m_trackingFbo.allocate(CAMERA_WIDTH,CAMERA_HEIGHT);
     m_trackingFbo.begin(); ofClear(0); m_trackingFbo.end();
     m_colorImg.allocate(CAMERA_WIDTH,CAMERA_HEIGHT);
     m_grayImage.allocate(CAMERA_WIDTH,CAMERA_HEIGHT);
     m_grayBg.allocate(CAMERA_WIDTH,CAMERA_HEIGHT);
     m_grayDiff.allocate(CAMERA_WIDTH,CAMERA_HEIGHT);
+    
+    m_finder.setup("xmls/HaarFrontalFace.xml");
 
 }
 
@@ -122,15 +124,47 @@ void CameraTrackingManager::updateCamera()
 
 void CameraTrackingManager::updateOpenCv()
 {
-     ofPixels pixels;
-     m_cameraFbo.readToPixels(pixels);
-     m_colorImg.setFromPixels(pixels);
-     m_grayImage = m_colorImg;
-     m_grayDiff.absDiff(m_grayBg, m_grayImage);
-     m_grayBg = m_grayImage;
+    
+     //m_colorImg.setFromPixels(m_videoGrabber.getPixels());
+     //m_grayImage.resetROI();
+     //m_grayImage = m_colorImg;
+     //m_grayDiff.absDiff(m_grayBg, m_grayImage);
+     //m_grayBg = m_grayImage;
 
-     int threshold = 30;
-     m_grayDiff.threshold(threshold);
+     //int threshold = 30;
+     //m_grayDiff.threshold(threshold);
+    
+    //ofPixels pixels;
+    
+    #if defined( TARGET_LINUX_ARM )
+    
+        m_finder.findHaarObjects(m_videoGrabberPi.getPixels());
+    
+    #else
+    
+       m_cameraFbo.readToPixels(m_pixels);
+       m_colorImg.setFromPixels(m_videoGrabber.getPixels());
+       m_finder.findHaarObjects(m_colorImg.getPixels());
+    
+    #endif
+    
+    if(m_finder.blobs.size()>0){
+        float speed = 0.05;
+        ofRectangle rect = m_finder.blobs[0].boundingRect;
+        m_roi.x += (rect.x - m_roi.x)*speed;
+        m_roi.y += (rect.y - m_roi.y)*speed;
+        m_roi.width += (rect.width - m_roi.width)*speed;
+        m_roi.height += (rect.height - m_roi.height)*speed;
+    }
+
+   
+   
+    m_grayImage.resetROI();
+    m_grayImage = m_colorImg;
+    m_grayImage.setROI(m_roi);
+    
+    //ofLogNotice() <<"CameraTrackingManager::updateOpenCv -> getRoi : x = " << m_grayImage.getROI().x;
+    
 
 }
 
@@ -144,11 +178,8 @@ void CameraTrackingManager::updateHue()
 void CameraTrackingManager::draw()
 {
     this->drawCamera();
-    
     this->drawTracking();
-    //ofSetColor(ofColor::white);
-    //m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
-    //m_videoGrabber.draw(0, 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight());
+
 }
 
 void CameraTrackingManager::drawCamera()
@@ -164,9 +195,12 @@ void CameraTrackingManager::drawCamera()
     #if defined( TARGET_LINUX_ARM )
         m_videoGrabberPi.getTextureReference().draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     #else
-        m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
+        m_grayImage.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     #endif
+    
+    ofNoFill();
 
+    ofDrawRectangle(m_roi.x  , m_roi.y - m_roi.height*0.6, m_roi.width, m_roi.height + m_roi.height*0.7);
 
     //this->drawHueColor();
 
@@ -179,15 +213,33 @@ void CameraTrackingManager::drawCamera()
         //m_grayDiff.draw(m_cameraArea.x,m_cameraArea.y,m_cameraArea.width,m_cameraArea.height);
         m_cameraFbo.draw(m_cameraArea.x,m_cameraArea.y,m_cameraArea.width,m_cameraArea.height);
         //m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
+        
+        
     }
     ofPopStyle();
 }
 
+
 void CameraTrackingManager::drawTracking()
+{
+    this->drawROI();
+}
+
+void CameraTrackingManager::drawROI()
+{
+    m_trackingFbo.begin();
+    
+    ofClear(0);
+    m_grayImage.drawROI(0,0, m_trackingFbo.getWidth(), m_trackingFbo.getHeight());
+    
+    m_trackingFbo.end();
+    
+}
+
+void CameraTrackingManager::drawGrayDiff()
 {
     ofEnableAlphaBlending();
     m_trackingFbo.begin();
-    
     
         ofPushStyle();
 
@@ -204,9 +256,9 @@ void CameraTrackingManager::drawTracking()
     m_trackingFbo.end();
     ofDisableAlphaBlending();
 
-    
-    
 }
+
+
 
 void CameraTrackingManager::drawHueColor()
 {
