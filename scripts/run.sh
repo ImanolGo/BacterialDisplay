@@ -32,13 +32,10 @@ PROCESS=BacterialDisplay
 
 cd ../bin
 
-while true; do
-	if pgrep $PROCESS
+if pgrep $PROCESS
 		then
 			echo '-> BacterialDisplay process already exit'
 		else
 			echo '-> Starting BacterialDisplay process...'
 			./BacterialDisplay &
-	fi
-	sleep 30
-done
+fi
