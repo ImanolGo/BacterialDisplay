@@ -13,9 +13,14 @@
 #if defined( TARGET_LINUX_ARM )
     #include "ofxRPiCameraVideoGrabber.h"
     #include "ImageFilterCollection.h"
+    #include "ofxCvPiCam.h"
 #endif
 
+#include "ofxCv.h"
+
 #include "ofxOpenCv.h"
+
+
 
 //========================== class CameraTrackingManager ==============================
 //============================================================================
@@ -105,21 +110,15 @@ private:
     bool                m_showCamera;
     
     #if defined( TARGET_LINUX_ARM )
-        ofxRPiCameraVideoGrabber m_videoGrabberPi;
-        OMXCameraSettings m_omxCameraSettings;
-        ImageFilterCollection m_filterCollection;
+        ofxCvPiCam              m_piCam;
+        cv::Mat                 m_frame;
     #endif
     
     
-    ofxCvColorImage         m_colorImg;
-    ofxCvGrayscaleImage 	m_grayImage;
-    ofxCvGrayscaleImage 	m_grayBg;
-    ofxCvGrayscaleImage 	m_grayDiff;
+    ofImage                 m_cropped;
+    ofxCv::ObjectFinder     m_objectFinder;
+    cv::Rect                m_roi;
     
-    ofxCvHaarFinder         m_finder;
-    
-    ofRectangle             m_roi;
-    ofPixels                m_pixels;
     
 };
 
