@@ -56,30 +56,9 @@ void CameraTrackingManager::setupCamera()
 
     #if defined( TARGET_LINUX_ARM )
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> Linux Target";
-
-        ofLogNotice() <<"CameraTrackingManager::setupCamera->  ofSetLogLevel  ofThread";
-        ofSetLogLevel("ofThread", OF_LOG_ERROR);
-
-       // ofLogNotice() <<"CameraTrackingManager::setupCamera-> setup console";
-        //allows keys to be entered via terminal remotely (ssh)
-
-        ofLogNotice() <<"CameraTrackingManager::setupCamera-> setup filters";
-
-        //m_filterCollection.setup("Pastel");
-
-
-        ofLogNotice() <<"CameraTrackingManager::setupCamera-> camera settings";
-        m_omxCameraSettings.width = CAMERA_WIDTH;
-        m_omxCameraSettings.height = CAMERA_HEIGHT;
-        m_omxCameraSettings.framerate = 30;
-        m_omxCameraSettings.isUsingTexture = true;
-        m_omxCameraSettings.doRecording = false;   //default false
-
-        ofLogNotice() <<"CameraTrackingManager::setupCamera-> video grabber";
-        m_videoGrabberPi.setup(m_omxCameraSettings);
-        //m_videoGrabberPi.applyImageFilter(m_filterCollection.getNextFilter());
-    
-        m_piImage.allocate(CAMERA_WIDTH,CAMERA_HEIGHT, OF_IMAGE_COLOR));
+        m_piCam.setup(CAMERA_WIDTH,CAMERA_HEIGHT,false);
+        m_piImage.allocate(CAMERA_WIDTH,CAMERA_HEIGHT, OF_IMAGE_GRAYSCALE);
+        m_cropped.allocate(CAMERA_WIDTH,CAMERA_HEIGHT, OF_IMAGE_GRAYSCALE);
 
     #else
 
@@ -87,6 +66,7 @@ void CameraTrackingManager::setupCamera()
         m_videoGrabber.setDeviceID(0);
         m_videoGrabber.setDesiredFrameRate(60);
         m_videoGrabber.initGrabber(CAMERA_WIDTH,CAMERA_HEIGHT);
+        m_cropped.allocate(CAMERA_WIDTH,CAMERA_HEIGHT, OF_IMAGE_COLOR);
 
     #endif
 
@@ -100,7 +80,7 @@ void CameraTrackingManager::setupOpenCv()
     
     m_objectFinder.setup(ofToDataPath("xmls/haarcascade_frontalface_alt2.xml"));
     m_objectFinder.setPreset(ObjectFinder::Fast);
-    m_cropped.allocate(CAMERA_WIDTH,CAMERA_HEIGHT, OF_IMAGE_COLOR);
+    
     
     m_roi.x = 0;
     m_roi.y = 0;
@@ -206,7 +186,7 @@ void CameraTrackingManager::drawCamera()
 
 
     #if defined( TARGET_LINUX_ARM )
-        toOf(m_piCam,m_piImage);
+        ofxCv::toOf(m_frame,m_piImage);
         m_piImage.update();
         m_piImage.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     #else
