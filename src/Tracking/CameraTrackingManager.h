@@ -114,7 +114,8 @@ private:
         cv::Mat                 m_frame;
     #endif
     
-    
+
+    ofImage                 m_piImage;
     ofImage                 m_cropped;
     ofxCv::ObjectFinder     m_objectFinder;
     cv::Rect                m_roi;

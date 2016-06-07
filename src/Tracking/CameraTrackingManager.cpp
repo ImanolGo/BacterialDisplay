@@ -78,6 +78,8 @@ void CameraTrackingManager::setupCamera()
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> video grabber";
         m_videoGrabberPi.setup(m_omxCameraSettings);
         //m_videoGrabberPi.applyImageFilter(m_filterCollection.getNextFilter());
+    
+        m_piImage.allocate(CAMERA_WIDTH,CAMERA_HEIGHT, OF_IMAGE_COLOR));
 
     #else
 
@@ -204,7 +206,9 @@ void CameraTrackingManager::drawCamera()
 
 
     #if defined( TARGET_LINUX_ARM )
-        m_piCam.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
+        toOf(m_piCam,m_piImage);
+        m_piImage.update();
+        m_piImage.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     #else
         m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     #endif
