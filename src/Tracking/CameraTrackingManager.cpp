@@ -72,7 +72,6 @@ void CameraTrackingManager::setupCamera()
         m_omxCameraSettings.width = CAMERA_WIDTH;
         m_omxCameraSettings.height = CAMERA_HEIGHT;
         m_omxCameraSettings.framerate = 30;
-        m_omxCameraSettings.enableTexture = true;
         m_omxCameraSettings.enablePixels = true;
         m_omxCameraSettings.isUsingTexture = true;
         m_omxCameraSettings.doRecording = false;   //default false
@@ -129,8 +128,7 @@ void CameraTrackingManager::updateCamera()
     #if defined( TARGET_LINUX_ARM )
 
        // m_videoTexture.loadData(m_videoGrabberPi.getPixels(), m_omxCameraSettings.width, m_omxCameraSettings.height, GL_RGBA);
-        m_frame = m_piCam.grab();
-
+    
     #else
 
         m_videoGrabber.update();
