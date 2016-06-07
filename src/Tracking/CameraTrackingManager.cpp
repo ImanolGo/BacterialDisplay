@@ -124,7 +124,7 @@ void CameraTrackingManager::updateOpenCv()
             m_objectFinder.update(m_frame);
             if(m_objectFinder.size() > 0) {
                 m_roi = toCv(m_objectFinder.getObject(0));
-                Mat croppedCamMat(camMat, m_roi);
+                Mat croppedCamMat(m_frame, m_roi);
                 resize(croppedCamMat, m_cropped);
                 m_cropped.update();
             }
