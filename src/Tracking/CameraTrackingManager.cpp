@@ -56,9 +56,36 @@ void CameraTrackingManager::setupCamera()
 
     #if defined( TARGET_LINUX_ARM )
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> Linux Target";
-        m_piCam.setup(CAMERA_WIDTH,CAMERA_HEIGHT,false);
-        m_piImage.allocate(CAMERA_WIDTH,CAMERA_HEIGHT, OF_IMAGE_GRAYSCALE);
-        m_cropped.allocate(CAMERA_WIDTH,CAMERA_HEIGHT, OF_IMAGE_GRAYSCALE);
+    
+        ofLogNotice() <<"CameraTrackingManager::setupCamera->  ofSetLogLevel  ofThread";
+        ofSetLogLevel("ofThread", OF_LOG_ERROR);
+    
+        // ofLogNotice() <<"CameraTrackingManager::setupCamera-> setup console";
+        //allows keys to be entered via terminal remotely (ssh)
+    
+        ofLogNotice() <<"CameraTrackingManager::setupCamera-> setup filters";
+    
+        //m_filterCollection.setup("Pastel");
+    
+    
+        ofLogNotice() <<"CameraTrackingManager::setupCamera-> camera settings";
+        m_omxCameraSettings.width = CAMERA_WIDTH;
+        m_omxCameraSettings.height = CAMERA_HEIGHT;
+        m_omxCameraSettings.framerate = 30;
+        m_omxCameraSettings.enableTexture = true;
+        m_omxCameraSettings.enablePixels = true;
+        m_omxCameraSettings.isUsingTexture = true;
+        m_omxCameraSettings.doRecording = false;   //default false
+    
+        ofLogNotice() <<"CameraTrackingManager::setupCamera-> video grabber";
+        m_videoGrabberPi.setup(m_omxCameraSettings);
+        //m_videoGrabberPi.applyImageFilter(m_filterCollection.getNextFilter());
+    
+        m_camMatPi = cv::Mat(cvSize(m_omxCameraSettings.width,
+                                            m_omxCameraSettings.height),
+                                     CV_8UC4,
+                                     m_videoGrabberPi.getPixels(),
+                                     cv::Mat::AUTO_STEP);
 
     #else
 
@@ -119,12 +146,12 @@ void CameraTrackingManager::updateOpenCv()
     #if defined( TARGET_LINUX_ARM )
     
         //m_finder.findHaarObjects(m_videoGrabberPi.getPixels());
-    
-        if(!m_frame.empty()) {
-            m_objectFinder.update(m_frame);
+        if(m_videoGrabberPi.isFrameNew())
+        {
+            m_objectFinder.update(m_camMatPi);
             if(m_objectFinder.size() > 0) {
                 m_roi = toCv(m_objectFinder.getObject(0));
-                Mat croppedCamMat(m_frame, m_roi);
+                Mat croppedCamMat(m_camMatPi, m_roi);
                 resize(croppedCamMat, m_cropped);
                 m_cropped.update();
             }
@@ -186,9 +213,7 @@ void CameraTrackingManager::drawCamera()
 
 
     #if defined( TARGET_LINUX_ARM )
-        ofxCv::toOf(m_frame,m_piImage);
-        m_piImage.update();
-        m_piImage.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
+         m_videoGrabberPi.getTextureReference().draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     #else
         m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
     #endif

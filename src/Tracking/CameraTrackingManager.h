@@ -13,12 +13,9 @@
 #if defined( TARGET_LINUX_ARM )
     #include "ofxRPiCameraVideoGrabber.h"
     #include "ImageFilterCollection.h"
-    #include "ofxCvPiCam.h"
 #endif
 
 #include "ofxCv.h"
-
-#include "ofxOpenCv.h"
 
 
 
@@ -110,10 +107,13 @@ private:
     bool                m_showCamera;
     
     #if defined( TARGET_LINUX_ARM )
-        ofxCvPiCam              m_piCam;
-        cv::Mat                 m_frame;
+        ofxRPiCameraVideoGrabber m_videoGrabberPi;
+        OMXCameraSettings m_omxCameraSettings;
+        ImageFilterCollection m_filterCollection;
     #endif
     
+    
+    cv::Mat                 m_camMatPi;
 
     ofImage                 m_piImage;
     ofImage                 m_cropped;
