@@ -11,46 +11,32 @@ public:
 	int height;
 	int framerate;
 	bool doRecording;
-	bool doRecordingPreview; //TODO make private
 	
-	int previewWidth;
-	int previewHeight;
-	bool isUsingTexture;
+	bool enableTexture;
 	bool enablePixels;
 	string recordingFilePath;
-	bool doConvertToMKV;
 	OMXCameraSettings()
 	{
 		width = 1280;
 		height = 720;
-		//currently limited to 30fps
-		//http://www.raspberrypi.org/forums/viewtopic.php?p=490143#p490143
 		framerate = 30;
-		isUsingTexture = true;
+		enableTexture = true;
 		enablePixels = false;
 		doRecording = false;
-		doRecordingPreview = false;
-		previewWidth = width;
-		previewHeight = height;
 		recordingFilePath = "";
-		doConvertToMKV = false;
-		//doFlipTexture = false;
 	}
 	
-	void enablePreview()
-	{
-		if(width<=1280)
-		{
-			previewWidth = width;
-			previewHeight = height;
-		}else 
-		{
-			previewWidth = 0;
-			previewHeight = 0;
-		}
-		
-		doRecordingPreview = true;
-	}
-private:
-	//bool doRecordingPreview;
+    
+    string toString()
+    {
+        stringstream info;
+        info << "width " << width << endl;
+        info << "height " << height << endl;
+        info << "framerate " << framerate << endl;
+        info << "enableTexture " << enableTexture << endl;
+        info << "enablePixels " << enablePixels << endl;
+        info << "doRecording " << doRecording << endl;
+        info << "recordingFilePath " << recordingFilePath << endl;
+        return info.str();
+    }
 };

@@ -13,8 +13,8 @@
 using namespace ofxCv;
 using namespace cv;
 
-const int CameraTrackingManager::CAMERA_WIDTH = 320; //320
-const int CameraTrackingManager::CAMERA_HEIGHT = 240; //240
+const int CameraTrackingManager::CAMERA_WIDTH = 640; //320
+const int CameraTrackingManager::CAMERA_HEIGHT = 480; //240
 
 CameraTrackingManager::CameraTrackingManager(): Manager()
 {
@@ -72,9 +72,8 @@ void CameraTrackingManager::setupCamera()
         m_omxCameraSettings.width = CAMERA_WIDTH;
         m_omxCameraSettings.height = CAMERA_HEIGHT;
         m_omxCameraSettings.framerate = 30;
+        m_omxCameraSettings.enableTexture = true;
         m_omxCameraSettings.enablePixels = true;
-        m_omxCameraSettings.isUsingTexture = true;
-        m_omxCameraSettings.doRecording = false;   //default false
     
         ofLogNotice() <<"CameraTrackingManager::setupCamera-> video grabber";
         m_videoGrabberPi.setup(m_omxCameraSettings);
@@ -227,12 +226,12 @@ void CameraTrackingManager::drawCamera()
 
     m_cameraFbo.end();
 
-
+    m_cameraFbo.draw(m_cameraArea.x,m_cameraArea.y,m_cameraArea.width,m_cameraArea.height);
     //m_cameraFbo.draw(m_cameraArea.x,m_cameraArea.y,m_cameraArea.width,m_cameraArea.height);
     if(m_showCamera){
 
         //m_grayDiff.draw(m_cameraArea.x,m_cameraArea.y,m_cameraArea.width,m_cameraArea.height);
-        m_cameraFbo.draw(m_cameraArea.x,m_cameraArea.y,m_cameraArea.width,m_cameraArea.height);
+        
         //m_videoGrabber.draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
         
         
