@@ -107,10 +107,10 @@ void CameraTrackingManager::setupOpenCv()
     m_objectFinder.setPreset(ObjectFinder::Fast);
     
     
-    m_roi.x = 0;
-    m_roi.y = 0;
-    m_roi.width = CAMERA_WIDTH;
-    m_roi.height = CAMERA_HEIGHT;
+    m_roi.width = CAMERA_HEIGHT/2;
+    m_roi.height = CAMERA_WIDTH/2;
+    m_roi.x = CAMERA_WIDTH/2 - m_roi.width/2;
+    m_roi.y = CAMERA_HEIGHT/2 - m_roi.height/2;
 
 }
 
@@ -145,19 +145,21 @@ void CameraTrackingManager::updateOpenCv()
         //m_finder.findHaarObjects(m_videoGrabberPi.getPixels());
         if(m_videoGrabberPi.isFrameNew())
         {
-            m_objectFinder.update(m_camMatPi);
+            //m_objectFinder.update(m_camMatPi);
             if(m_objectFinder.size() > 0) {
                 m_roi = toCv(m_objectFinder.getObject(0));
-                Mat croppedCamMat(m_camMatPi, m_roi);
-                resize(croppedCamMat, m_cropped);
-                m_cropped.update();
+               
             }
+            
+            Mat croppedCamMat(m_camMatPi, m_roi);
+            resize(croppedCamMat, m_cropped);
+            m_cropped.update();
         }
     
     #else
     
         if(m_videoGrabber.isFrameNew()) {
-            m_objectFinder.update(m_videoGrabber);
+            //m_objectFinder.update(m_videoGrabber);
             
             if(m_objectFinder.size() > 0) {
                 
