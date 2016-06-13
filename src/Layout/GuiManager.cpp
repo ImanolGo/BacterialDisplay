@@ -43,26 +43,38 @@ void GuiManager::setupCameraGui()
 {
     
     m_cameraGui.setup("CameraGUI", GUI_CAMERA_SETTINGS_FILE_NAME);
-    m_cameraGui.setPosition(20,20);
+    m_cameraGui.loadFont(OF_TTF_MONO,16,true,true);
+    m_cameraGui.setPosition(20,40);
+    //m_cameraGui.setWidthElements(100);
+    m_cameraGui.setDefaultHeight(40);
+    m_cameraGui.setDefaultWidth(500);
     
     ofPtr<CameraTrackingManager> cameraTrackingManager = AppManager::getInstance().getCameraTrackingManager();
+    ofPtr<DisplayManager> displayManager = AppManager::getInstance().getDisplayManager();
    
     ofxFloatSlider * hue = new ofxFloatSlider();
     hue->setup("Hue", 0.5, 0.0, 1.0);
     hue->addListener(cameraTrackingManager.get(), &CameraTrackingManager::onHueChange);
-    m_cameraGui.add(hue);
+   // m_cameraGui.add(hue);
     
     ofxFloatSlider * hueAlpha = new ofxFloatSlider();
     hueAlpha->setup("Hue Alpha", 0.5, 0.0, 1.0);
     hueAlpha->addListener(cameraTrackingManager.get(), &CameraTrackingManager::onHueAlphaChange);
-    m_cameraGui.add(hueAlpha);
+    //m_cameraGui.add(hueAlpha);
     
     ofxFloatSlider * hueChangeRate = new ofxFloatSlider();
     hueChangeRate->setup("Hue Change Rate (s)", 1.0, 0.01, 10.0);
     hueChangeRate->addListener(cameraTrackingManager.get(), &CameraTrackingManager::onHueChangeRate);
-    m_cameraGui.add(hueChangeRate);
+    //m_cameraGui.add(hueChangeRate);
+    
+    ofxFloatSlider * flickering = new ofxFloatSlider();
+    flickering->setup("FLICKERING", 0.0, 0.0, 1.0);
+    flickering->addListener(displayManager.get(), &DisplayManager::onFlickeringCHange);
+    m_cameraGui.add(flickering);
     
     m_cameraGui.loadFromFile(GUI_CAMERA_SETTINGS_FILE_NAME);
+    
+    
 }
 
 void GuiManager::setHue(float hue)

@@ -140,7 +140,7 @@ void DisplayUnit::setDisplayUnitPreview(const BasicVisual& visual)
     m_displayUnitPreview = ofPtr<DisplayUnitPreview>(new DisplayUnitPreview(visual,m_settings));
 }
 
-DisplayUnit::DisplayUnit(const BasicVisual& visual, const DisplayUnitSettings& settings): BasicVisual(), m_margin(0.0)
+DisplayUnit::DisplayUnit(const BasicVisual& visual, const DisplayUnitSettings& settings): BasicVisual(), m_margin(0.0), m_flickering(0.0)
 {
     m_position = visual.getPosition();
     m_width = visual.getWidth();
@@ -230,7 +230,7 @@ float DisplayUnit::getNoise(int index)
     float time = ofGetElapsedTimef() * noiseSpeed;
     
     float tmpNoise = ofNoise( m_settings.pos.x/ noiseFrequency,  (m_settings.pos.y+0.3*index)/ noiseFrequency, time );
-    //tmpNoise = ofMap(tmpNoise, 0.0, 1.0, 0.2, 1.0);
+    tmpNoise = ofMap(tmpNoise, 0.0, 1.0, 1.0 - m_flickering, 1.0);
     
     return tmpNoise;
 }

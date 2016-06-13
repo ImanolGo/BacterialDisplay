@@ -99,6 +99,8 @@ class DisplayUnit: public BasicVisual {
         int getIndex() const {return m_settings.index;}
     
         void setDisplayUnitPreview(const BasicVisual& visual);
+    
+        void setFlickering(float value){m_flickering = value;}
 
     
         // Return Data Method
@@ -130,6 +132,7 @@ class DisplayUnit: public BasicVisual {
         ofPtr<TextVisual>  m_textVisual;
     
         float m_margin;
+        float m_flickering;
     
 };
 

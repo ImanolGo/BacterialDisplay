@@ -73,6 +73,8 @@ private:
     ofParameter<float>	offsetY;
     ofParameter<float>	scaleX;
     ofParameter<float>	scaleY;
+    
+    ofParameter<float>	flickering;
 
     // Camera GUI
     ofxPanel    m_cameraGui;      //Class creating a camera gui panel

@@ -27,6 +27,8 @@ class DisplayFadeCandy {
     
         void updateDisplayUnits(const ofRectangle& grabArea, const ofPixels& screenPixels);
     
+        void setFlickering(float flickering);
+    
         void draw();
     
         int getId(){return m_id;}

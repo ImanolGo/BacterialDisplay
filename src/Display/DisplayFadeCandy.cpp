@@ -60,6 +60,20 @@ void DisplayFadeCandy::updateDisplayUnits(const ofRectangle &grabArea, const ofP
     }
 }
 
+void DisplayFadeCandy::setFlickering(float flickering)
+{
+    for(DisplayUnitsMap::iterator it = m_displayUnits.begin(); it != m_displayUnits.end(); it++){
+        
+        int channel = it->second->getChannel();
+        
+        if (channel > 0 && channel <= FADE_CANDY_NUM_CHANNELS ) {
+            int i = (channel-1)*LEDS_PER_CHANNEL + it->second->getIndex();
+            
+            it->second->setFlickering(flickering);
+        }
+    }
+}
+
 
 void DisplayFadeCandy::draw()
 {

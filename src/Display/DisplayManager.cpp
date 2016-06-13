@@ -15,7 +15,7 @@
 
 
 
-DisplayManager::DisplayManager(): Manager(), m_displayUnitSize(0.0), m_showDisplayPreview(true)
+DisplayManager::DisplayManager(): Manager(), m_displayUnitSize(0.0), m_showDisplayPreview(true), m_flickering(0.0)
 {
 	//Intentionally left empty
 }
@@ -311,5 +311,15 @@ void DisplayManager::drawRectangles()
     ofPopStyle();
     ofPopMatrix();
 
+}
+
+void DisplayManager::onFlickeringCHange(float & value)
+{
+    m_flickering = value;
+    
+    
+    for(DisplayFadeCandyMap::iterator it = m_displayFadeCandys.begin(); it != m_displayFadeCandys.end(); it++){
+        it->second->setFlickering(m_flickering);
+    }
 }
 

@@ -51,6 +51,8 @@ class DisplayManager: public Manager
         DisplayVisuals& getDisplayVisuals(){return m_displayVisuals;}
     
         void showDisplayPreview(bool show){m_showDisplayPreview=show;}
+    
+        void onFlickeringCHange(float & value);
 
     private:
     
@@ -98,6 +100,8 @@ class DisplayManager: public Manager
         float               m_displayUnitPreviewSize;
         ofRectangle         m_imageSpaceRectangle;
         ofRectangle         m_previewRectangle;
+    
+        float               m_flickering;
     
         bool                m_showDisplayPreview;
 
