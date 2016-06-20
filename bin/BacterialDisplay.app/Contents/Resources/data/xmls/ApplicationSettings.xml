@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+
+  <of_settings>
+	<window title="Bacterial Display" x="0" y="0" width="1280" height="1024" fullscreen="0"/>
+	<debug showCursor="1" setVerbose="0"/>
+	<network ipAddress="127.0.0.1" port="7890"/>
+  </of_settings>
+
+  <textures>
+
+  	<texture name="Dot" path="images/general/dot.png"/>
+    <texture name="Circle" path="images/general/Circle.png"/>
+    <texture name="Ring" path="images/general/Ring2.png"/>
+    <texture name="Pixel" path="images/general/Pixel.png"/>
+
+  </textures>
+
+  <colors>
+
+	<color name="CenterBackgroundColor" r="85" g="78" b="68" a="255"/>
+	<color name="EdgeBackgroundColor" r="30" g="30" b="30" a="255"/>
+
+  </colors>
+
+</settings>

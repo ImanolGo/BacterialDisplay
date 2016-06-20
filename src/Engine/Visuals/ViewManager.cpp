@@ -108,8 +108,8 @@ void ViewManager::draw()
 
 void ViewManager::drawBackround()
 {
-    ofClear ( 0 );
-    //ofBackgroundGradient(ofColor::white, ofColor::gray);
+    //ofClear ( 0 );
+    ofBackgroundGradient(ofColor::gray, ofColor::black);
     //ofColor centerColor = AppManager::getInstance().getSettingsManager()->getColor("CenterBackgroundColor");
     //ofColor edgeColor = AppManager::getInstance().getSettingsManager()->getColor("EdgeBackgroundColor");
     //ofBackgroundGradient(centerColor,edgeColor,OF_GRADIENT_CIRCULAR);
