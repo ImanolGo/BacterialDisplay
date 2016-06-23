@@ -45,6 +45,16 @@ void KeyboardManager::keyPressed(ofKeyEventArgs &e)
     
     ofLogNotice() <<"KeyboardManager::keyPressed-> " + ofToString(key);
     
+    if (key == OF_KEY_LEFT){
+         AppManager::getInstance().getGuiManager()->decreaseFlickering();
+        ofLogNotice() <<"KeyboardManager::KEYLEFT-> " + ofToString(key);
+     }
+    
+    if (key == OF_KEY_RIGHT){
+        AppManager::getInstance().getGuiManager()->increaseFlickering();
+        ofLogNotice() <<"KeyboardManager::KEYRIGHT-> " + ofToString(key);
+    }
+    
     if(key == 'g' || key == 'G') {
         AppManager::getInstance().getGuiManager()->toggleGui();
     }
@@ -53,6 +63,10 @@ void KeyboardManager::keyPressed(ofKeyEventArgs &e)
         AppManager::getInstance().toggleDebugMode();
     }
 
+    
+    if(key >= 48 && key <= 57) {
+        AppManager::getInstance().getDisplayManager()->setMode(key - 48);
+    }
     
     if(key >= 48 && key <= 57) {
         AppManager::getInstance().getDisplayManager()->setMode(key - 48);

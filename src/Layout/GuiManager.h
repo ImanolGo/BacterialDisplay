@@ -47,6 +47,10 @@ public:
     void showGui(bool show){m_showGui=show;}
     
     void setHue(float hue);
+    
+    void increaseFlickering();
+    
+    void decreaseFlickering();
 
 private:
 
@@ -74,7 +78,7 @@ private:
     ofParameter<float>	scaleX;
     ofParameter<float>	scaleY;
     
-    ofParameter<float>	flickering;
+    ofParameter<float>	m_flickering;
 
     // Camera GUI
     ofxPanel    m_cameraGui;      //Class creating a camera gui panel

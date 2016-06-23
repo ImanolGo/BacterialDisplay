@@ -67,10 +67,9 @@ void GuiManager::setupCameraGui()
     hueChangeRate->addListener(cameraTrackingManager.get(), &CameraTrackingManager::onHueChangeRate);
     //m_cameraGui.add(hueChangeRate);
     
-    ofxFloatSlider * flickering = new ofxFloatSlider();
-    flickering->setup("FLICKERING", 0.0, 0.0, 1.0);
-    flickering->addListener(displayManager.get(), &DisplayManager::onFlickeringCHange);
-    m_cameraGui.add(flickering);
+    m_flickering.set("FLICKERING", 0.0, 0.0, 1.0);
+    m_flickering.addListener(displayManager.get(), &DisplayManager::onFlickeringCHange);
+    m_cameraGui.add(m_flickering);
     
     m_cameraGui.loadFromFile(GUI_CAMERA_SETTINGS_FILE_NAME);
     
@@ -109,3 +108,17 @@ void GuiManager::toggleGui()
 {
     m_showGui = !m_showGui;
 }
+
+
+void GuiManager::increaseFlickering()   
+{
+    m_flickering += 0.05;
+    m_flickering = ofClamp(m_flickering, 0, 1);
+}
+
+void GuiManager::decreaseFlickering()
+{
+    m_flickering -= 0.05;
+    m_flickering = ofClamp(m_flickering, 0, 1);
+}
+
