@@ -18,7 +18,7 @@ using namespace cv;
 const int CameraTrackingManager::CAMERA_WIDTH = 640; //320
 const int CameraTrackingManager::CAMERA_HEIGHT = 480; //240
 
-CameraTrackingManager::CameraTrackingManager(): Manager()
+CameraTrackingManager::CameraTrackingManager(): Manager(), m_numberPixels(16)
 {
     //Intentionally left empty
 }
@@ -55,6 +55,8 @@ void CameraTrackingManager::setupCamera()
     m_cameraArea.height = m_cameraArea.width*CAMERA_HEIGHT/CAMERA_WIDTH;
     m_cameraArea.x = ofGetWidth()*0.75 -  m_cameraArea.width*0.5;
     m_cameraArea.y = ofGetHeight()*0.25 -  m_cameraArea.height*0.5;
+    
+    m_numberPixels = 16;
     
     
     
@@ -256,7 +258,7 @@ void CameraTrackingManager::drawCamera()
     
     m_cameraFbo.end();
     
-    m_cameraFbo.draw(m_cameraArea.x,m_cameraArea.y,m_cameraArea.width,m_cameraArea.height);
+
     //m_cameraFbo.draw(m_cameraArea.x,m_cameraArea.y,m_cameraArea.width,m_cameraArea.height);
     if(m_showCamera){
         
@@ -275,6 +277,21 @@ void CameraTrackingManager::drawCamera()
             m_cropped.draw(0,0);
         m_contrastShader.end();
     m_contrastFbo.end();
+    
+    m_pixelatedFbo.begin();
+        m_pixelateShader.begin();
+        // m_contrastShader.setUniform4f("range", 0.05, 1, 0.5, 1.0);
+        m_pixelateShader.setUniform2f("size", CAMERA_WIDTH/m_numberPixels,CAMERA_HEIGHT/m_numberPixels);
+        m_contrastFbo.draw(0,0);
+        m_pixelateShader.end();
+    m_pixelatedFbo.end();
+    
+    
+    
+    m_cameraFbo.draw(m_cameraArea.x -m_cameraArea.width*0.5 ,m_cameraArea.y,m_cameraArea.width,m_cameraArea.height);
+    
+    m_contrastFbo.draw(m_cameraArea.x + m_cameraArea.width*1.5 + 10 ,m_cameraArea.y,-m_cameraArea.width,m_cameraArea.height);
+    
 }
 
 
@@ -290,11 +307,11 @@ void CameraTrackingManager::drawROI()
     //ofClear(0);
     //m_grayImage.drawROI(0,0, m_trackingFbo.getWidth(), m_trackingFbo.getHeight());
     
-    ofPushStyle();
+    ofPushMatrix();
     ofTranslate(m_cameraFbo.getWidth(), 0);
     ofScale(-1, 1);
-    m_contrastFbo.draw(0, 0, m_trackingFbo.getWidth(), m_trackingFbo.getHeight());
-    ofPopStyle();
+    m_pixelatedFbo.draw(0, 0, m_trackingFbo.getWidth(), m_trackingFbo.getHeight());
+    ofPopMatrix();
     
     m_trackingFbo.end();
     

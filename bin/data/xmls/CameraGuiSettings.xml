@@ -6,4 +6,5 @@
 <FLICKERING>1</FLICKERING>
 <Flickering>0</Flickering>
 	<Contrast>0.142857, 0.255102, 0.346939, 1</Contrast>
+<NumberPixels>16</NumberPixels>
 </CameraGUI>

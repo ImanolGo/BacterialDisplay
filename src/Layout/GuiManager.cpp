@@ -71,6 +71,11 @@ void GuiManager::setupCameraGui()
     m_flickering.addListener(displayManager.get(), &DisplayManager::onFlickeringCHange);
     m_cameraGui.add(m_flickering);
     
+    m_numberPixels.set("NumberPixels", 16, 8, 32);
+    m_numberPixels.addListener(cameraTrackingManager.get(), &CameraTrackingManager::onNumberPixelsChange);
+    m_cameraGui.add(m_numberPixels);
+    
+    
     m_contrastCamera.set("Contrast", ofVec4f(0), ofVec4f(0), ofVec4f(1));
     m_contrastCamera.addListener(cameraTrackingManager.get(), &CameraTrackingManager::onContrastChange);
     m_cameraGui.add(m_contrastCamera);

@@ -63,6 +63,10 @@ public:
     
     const ofFbo& getCameraFbo(){return m_cameraFbo;}
     
+    const ofFbo& getContrastFbo(){return m_contrastFbo;}
+    
+    const ofFbo& getPixelatedFbo(){return m_pixelatedFbo;}
+    
     const ofFbo& getTrackedImage(){return m_trackingFbo;}
     
     void onHueChange(float & value);
@@ -72,6 +76,8 @@ public:
     void onHueChangeRate(float & value);
     
     void onContrastChange(ofVec4f & value){ m_contrastRange = value;}
+    
+    void onNumberPixelsChange(int & value){ m_numberPixels = value;}
     
     
 private:
@@ -133,7 +139,8 @@ private:
     ofxCv::ObjectFinder     m_objectFinder;
     cv::Rect                m_roi;
     
-    ofVec4f                     m_contrastRange;
+    ofVec4f                 m_contrastRange;
+    int                     m_numberPixels;
     
     
 };
