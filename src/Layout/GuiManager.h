@@ -71,6 +71,7 @@ private:
     int					numVisualisationModes;
     string				*visualisationModeTitles;
 
+    ofParameter<ofVec4f>    m_contrastCamera;
     
     ofParameterGroup	pictureCalibrationParameters;
     ofParameter<float>	offsetX;

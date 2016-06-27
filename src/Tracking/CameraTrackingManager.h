@@ -10,10 +10,16 @@
 
 #include "Manager.h"
 
+#define PSE3
+
+
 #if defined( TARGET_LINUX_ARM )
-    #include "ofxRPiCameraVideoGrabber.h"
-    #include "ImageFilterCollection.h"
+#include "ofxRPiCameraVideoGrabber.h"
+#include "ImageFilterCollection.h"
 #endif
+
+
+#include "ofxCv.h"
 
 
 
@@ -57,24 +63,39 @@ public:
     
     const ofFbo& getCameraFbo(){return m_cameraFbo;}
     
+    const ofFbo& getTrackedImage(){return m_trackingFbo;}
+    
     void onHueChange(float & value);
     
     void onHueAlphaChange(float & value);
     
     void onHueChangeRate(float & value);
     
-   
+    void onContrastChange(ofVec4f & value){ m_contrastRange = value;}
+    
     
 private:
     
     //! Set-up the camera tracking
     void setupCamera();
     
+    void setupOpenCv();
+    
+    void setupShaders();
+    
     void updateCamera();
     
     void updateHue();
     
+    void updateOpenCv();
+    
     void drawCamera();
+    
+    void drawTracking();
+    
+    void drawROI();
+    
+    void drawGrayDiff();
     
     void drawHueColor();
     
@@ -87,15 +108,33 @@ private:
     ofColor             m_hueColor;
     ofRectangle         m_cameraArea;
     
+    ofShader                m_contrastShader;              ///< contrast shader
+    ofShader                m_pixelateShader;              ///< pixelate shader
+    
+    ofFbo                   m_contrastFbo;               ///< The fbo holding the contasted fbo
+    ofFbo                   m_pixelatedFbo;                ///< The fbo holding the pixelated image
+    
     ofFbo				m_cameraFbo;
+    ofFbo				m_trackingFbo;
     
     bool                m_showCamera;
     
-    #if defined( TARGET_LINUX_ARM )
-        ofxRPiCameraVideoGrabber m_videoGrabberPi;
-        OMXCameraSettings m_omxCameraSettings;
-        ImageFilterCollection m_filterCollection;
-    #endif
+#if defined( TARGET_LINUX_ARM )
+    ofxRPiCameraVideoGrabber m_videoGrabberPi;
+    OMXCameraSettings m_omxCameraSettings;
+    ImageFilterCollection m_filterCollection;
+#endif
+    
+    
+    cv::Mat                 m_camMatPi;
+    
+    ofImage                 m_piImage;
+    ofImage                 m_cropped;
+    ofxCv::ObjectFinder     m_objectFinder;
+    cv::Rect                m_roi;
+    
+    ofVec4f                     m_contrastRange;
+    
     
 };
 

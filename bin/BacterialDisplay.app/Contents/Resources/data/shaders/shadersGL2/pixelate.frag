@@ -1,18 +1,20 @@
 #version 120
 
 uniform sampler2DRect tex0;
-uniform sampler2DRect maskTex;
-
-varying vec2 texCoordVarying;
+uniform vec2 size;
 
 void main()
 {
-    // Get color value from
-    vec3 src = texture2DRect(tex0, texCoordVarying).rgb;
 
-    // Get alpha value
-    float mask = texture2DRect(maskTex, texCoordVarying).r;
+  vec2 uv = gl_TexCoord[0].xy;
+  vec3 tc = vec3(1.0, 0.0, 0.0);
 
-    // Set
-    gl_FragColor = vec4(src , mask);
+  float dx = size.x;
+  float dy = size.y;
+  vec2 coord = vec2(dx*floor(uv.x/dx), dy*floor(uv.y/dy));
+
+  tc = texture2DRect(tex0, coord).rgb;
+    	
+  gl_FragColor = vec4(tc, 1.0);
+  	
 }

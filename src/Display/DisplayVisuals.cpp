@@ -133,10 +133,10 @@ void DisplayVisuals::drawCamera()
 {
     
     auto area =  AppManager::getInstance().getDisplayManager()->getDisplayArea();
-    auto cameraFbo = AppManager::getInstance().getCameraTrackingManager()->getCameraFbo();
-    //auto trackedImage = AppManager::getInstance().getCameraTrackingManager()->getTrackedImage();
+    //auto fbo = AppManager::getInstance().getCameraTrackingManager()->getCameraFbo();
+    auto fbo = AppManager::getInstance().getCameraTrackingManager()->getTrackedImage();
     
-    cameraFbo.draw(area);
+    fbo.draw(area);
 }
 
 

@@ -4,4 +4,6 @@
 	<Hue_Change_Rate__s_>2.55745</Hue_Change_Rate__s_>
 <CameraGUI/>
 <FLICKERING>1</FLICKERING>
+<Flickering>0</Flickering>
+	<Contrast>0.867347, 0.591837, 0.80102, 0.780612</Contrast>
 </CameraGUI>

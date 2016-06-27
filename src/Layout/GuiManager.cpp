@@ -43,11 +43,11 @@ void GuiManager::setupCameraGui()
 {
     
     m_cameraGui.setup("CameraGUI", GUI_CAMERA_SETTINGS_FILE_NAME);
-    m_cameraGui.loadFont(OF_TTF_MONO,16,true,true);
+    //m_cameraGui.loadFont(OF_TTF_MONO,16,true,true);
     m_cameraGui.setPosition(20,40);
     //m_cameraGui.setWidthElements(100);
-    m_cameraGui.setDefaultHeight(40);
-    m_cameraGui.setDefaultWidth(500);
+    //m_cameraGui.setDefaultHeight(40);
+    //m_cameraGui.setDefaultWidth(500);
     
     ofPtr<CameraTrackingManager> cameraTrackingManager = AppManager::getInstance().getCameraTrackingManager();
     ofPtr<DisplayManager> displayManager = AppManager::getInstance().getDisplayManager();
@@ -67,9 +67,14 @@ void GuiManager::setupCameraGui()
     hueChangeRate->addListener(cameraTrackingManager.get(), &CameraTrackingManager::onHueChangeRate);
     //m_cameraGui.add(hueChangeRate);
     
-    m_flickering.set("FLICKERING", 0.0, 0.0, 1.0);
+    m_flickering.set("Flickering", 0.0, 0.0, 1.0);
     m_flickering.addListener(displayManager.get(), &DisplayManager::onFlickeringCHange);
     m_cameraGui.add(m_flickering);
+    
+    m_contrastCamera.set("Contrast", ofVec4f(0), ofVec4f(0), ofVec4f(1));
+    m_contrastCamera.addListener(cameraTrackingManager.get(), &CameraTrackingManager::onContrastChange);
+    m_cameraGui.add(m_contrastCamera);
+
     
     m_cameraGui.loadFromFile(GUI_CAMERA_SETTINGS_FILE_NAME);
     
