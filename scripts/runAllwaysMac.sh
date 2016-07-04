@@ -26,6 +26,8 @@ while true; do
 			echo '-> Starting fcserver-osx'
 	fi
 
+	sleep 20
+
 	PROCESS=BacterialDisplay
 	if pgrep $PROCESS
 		then
@@ -37,5 +39,5 @@ while true; do
 	fi
 
 
-	sleep 60
+	sleep 40
 done
