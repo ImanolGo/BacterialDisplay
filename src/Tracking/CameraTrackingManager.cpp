@@ -94,9 +94,13 @@ void CameraTrackingManager::setupCamera()
 #else
     
     ofLogNotice() <<"CameraTrackingManager::OS X target";
-    m_videoGrabber.setGrabber(std::make_shared<ofxPS3EyeGrabber>());
-    //m_videoGrabber.setDeviceID(0);
-    //m_videoGrabber.setDesiredFrameRate(60);
+    #if defined( PSE3 )
+        m_videoGrabber.setGrabber(std::make_shared<ofxPS3EyeGrabber>());
+    #else
+        m_videoGrabber.setDeviceID(0);
+    #endif
+    
+        //m_videoGrabber.setDesiredFrameRate(60);
     m_videoGrabber.initGrabber(CAMERA_WIDTH,CAMERA_HEIGHT);
 
     
@@ -314,6 +318,8 @@ void CameraTrackingManager::drawROI()
     ofPopMatrix();
     
     m_trackingFbo.end();
+    
+    float f = ofMap(0, -1, 1, 64, 127);
     
 }
 

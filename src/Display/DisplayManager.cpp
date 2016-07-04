@@ -76,7 +76,7 @@ void DisplayManager::createDisplayUnitSettings()
     
     
     m_displayUnitSize = 25;
-    float scale = 1.1*m_displayUnitSize/m_displayUnitPreviewSize;
+    float scale = 1*m_displayUnitSize/m_displayUnitPreviewSize;
     float margin = m_displayUnitPreviewSize*marginRatio;
     float wallHeight = m_displayUnitPreviewSize*(maxNumRows);
     
@@ -91,7 +91,7 @@ void DisplayManager::createDisplayUnitSettings()
     w = wallWidth*scale;
     h = wallHeight*scale;
     x = ofGetWidth()*0.75 - w*0.5;
-    y = ofGetHeight()*0.75 - h*0.5 - margin;
+    y = ofGetHeight()*0.75 - h*0.5 - 14*margin;
     
     m_imageSpaceRectangle = ofRectangle(x,y,w,h);
     
