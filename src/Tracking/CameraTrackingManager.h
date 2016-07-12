@@ -10,7 +10,7 @@
 
 #include "Manager.h"
 
-#define PSE3
+//#define PSE3
 
 
 #if defined( TARGET_LINUX_ARM )
