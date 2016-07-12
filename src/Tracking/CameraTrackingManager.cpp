@@ -126,10 +126,16 @@ void CameraTrackingManager::setupOpenCv()
     m_objectFinder.setPreset(ObjectFinder::Accurate);
     
     
-    m_roi.x = 0;
-    m_roi.y = 0;
-    m_roi.width = CAMERA_WIDTH;
-    m_roi.height = CAMERA_HEIGHT;
+//    m_roi.x = 0;
+//    m_roi.y = 0;
+//    m_roi.width = CAMERA_WIDTH;
+//    m_roi.height = CAMERA_HEIGHT;
+    
+    
+        m_roi.width = CAMERA_HEIGHT*0.2;
+        m_roi.height = CAMERA_WIDTH*0.2;
+        m_roi.x = CAMERA_WIDTH*0.5  -  m_roi.width *0.5;
+        m_roi.y = CAMERA_HEIGHT*0.5 - m_roi.height*0.5;
     
 }
 
@@ -193,7 +199,7 @@ void CameraTrackingManager::updateOpenCv()
 #else
     
     if(m_videoGrabber.isFrameNew()) {
-        m_objectFinder.update(m_videoGrabber);
+        //m_objectFinder.update(m_videoGrabber);
         
         if(m_objectFinder.size() > 0) {
             
