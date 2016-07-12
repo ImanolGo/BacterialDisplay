@@ -123,7 +123,7 @@ void CameraTrackingManager::setupOpenCv()
     
     
     m_objectFinder.setup(ofToDataPath("xmls/haarcascade_frontalface_alt2.xml"));
-    m_objectFinder.setPreset(ObjectFinder::Fast);
+    m_objectFinder.setPreset(ObjectFinder::Accurate);
     
     
     m_roi.x = 0;
@@ -243,7 +243,6 @@ void CameraTrackingManager::drawCamera()
     m_cameraFbo.begin();
     
     ofSetColor(ofColor::white);
-    
     
 #if defined( TARGET_LINUX_ARM )
     m_videoGrabberPi.getTextureReference().draw(m_cameraFbo.getWidth(), 0, -m_cameraFbo.getWidth(), m_cameraFbo.getHeight() );
