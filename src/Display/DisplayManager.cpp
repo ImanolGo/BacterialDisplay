@@ -258,10 +258,13 @@ void DisplayManager::grabImageData()
 
 void DisplayManager::updateFadeCandys()
 {
+    m_opcClient.update();
     // If the client is not connected do not try and send information
     if (!m_opcClient.isConnected()){
+        //m_opcClient.retryConnecting();
         // Will continue to try and reconnect to the Pixel Server
         m_opcClient.tryConnecting();
+       // ofLogNotice() <<"DisplayManager::updateFadeCandys-> RETRY CONNECTION " ;
         return;
     }
   
