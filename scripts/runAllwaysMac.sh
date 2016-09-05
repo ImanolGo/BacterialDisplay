@@ -18,7 +18,7 @@ cd ~/c-lab/BacterialDisplay/fcserver
 ./fcserver-osx &
 echo '-> Starting fcserver-osx'
 
-sleep 30
+sleep 5
 
 while true; do
 	PROCESS=fcserver-osx
@@ -31,7 +31,7 @@ while true; do
 			echo '-> Starting fcserver-osx'
 	fi
 
-	sleep 10
+	sleep 5
 
 	PROCESS=BacterialDisplay
 	if pgrep $PROCESS
@@ -42,5 +42,5 @@ while true; do
 			echo '-> Opening BacterialDisplay'
 	fi
 
-	sleep 50
+	sleep 55
 done
