@@ -230,7 +230,7 @@ void ofxOPC::tryConnecting()
 {
     if (!client.isConnected())
     {
-        if (connectionAttempts <= 10)
+        if (connectionAttempts <= 3)
         {
             if(timer >= endTime && !tryReconnecting)
             {
@@ -251,7 +251,7 @@ void ofxOPC::tryConnecting()
 //--------------------------------------------------------------
 void ofxOPC::retryConnecting()
 {
-    ofLog(OF_LOG_NOTICE, "Will Try Reconnecting");
+    //ofLog(OF_LOG_NOTICE, "Will Try Reconnecting");
     connectionAttempts = 0;
 }
 //--------------------------------------------------------------
